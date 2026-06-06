@@ -10,8 +10,7 @@ if (!uri) {
   throw new Error("MONGODB_URI or DATABASE_URL is required.");
 }
 
-export const client =
-  globalThis.mongoClient || new MongoClient(uri);
+export const client = globalThis.mongoClient || new MongoClient(uri);
 
 if (process.env.NODE_ENV !== "production") {
   globalThis.mongoClient = client;

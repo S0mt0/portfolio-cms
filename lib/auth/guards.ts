@@ -1,12 +1,12 @@
 import { redirect } from "next/navigation";
 
 import { getCurrentSession } from "@/lib/auth/server";
-import { isAllowedAdminUser } from "@/lib/auth/allowlist";
+import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
 
 export async function requireAdminSession() {
   const session = await getCurrentSession();
 
-  if (!session?.user || !isAllowedAdminUser(session.user)) {
+  if (!session?.user || !isAllowedAdminEmail(session.user.email)) {
     redirect("/auth/login");
   }
 

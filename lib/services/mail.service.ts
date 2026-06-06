@@ -50,4 +50,4 @@ class MailService {
   }
 }
 
-export const mailService = new MailService("My Portfolio CMS");
+export const mailService = new MailService();

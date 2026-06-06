@@ -35,13 +35,14 @@ export function LoginForm() {
       email: values.email,
       password: values.password,
       callbackURL,
+      rememberMe: true,
     });
 
     if (error) {
       setMessage({
         type: "error",
         text:
-          error.message === "EMAIL_NOT_VERIFIED"
+          error.code === "EMAIL_NOT_VERIFIED"
             ? "Please verify your email before opening the studio."
             : error.message ||
               "Login failed. Check your details and try again.",

@@ -9,23 +9,12 @@ export const AUTH_ROUTES = [
   "/auth/error",
 ] as const;
 
-export const GUEST_ONLY_AUTH_ROUTES = [
-  "/auth/login",
-  "/auth/signup",
-  "/auth/forgot-password",
-  "/auth/reset-password",
-] as const;
-
 export const PUBLIC_ROUTES = ["/api/auth"] as const;
 
 export const DEFAULT_AUTH_REDIRECT = "/";
 
 export function isAuthRoute(pathname: string) {
   return AUTH_ROUTES.some((route) => pathname.startsWith(route));
-}
-
-export function isGuestOnlyAuthRoute(pathname: string) {
-  return GUEST_ONLY_AUTH_ROUTES.some((route) => pathname.startsWith(route));
 }
 
 export function isPublicRoute(pathname: string) {
