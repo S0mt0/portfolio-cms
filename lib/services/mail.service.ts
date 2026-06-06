@@ -4,7 +4,7 @@ class MailService {
   private sender: string;
   private resend: Resend;
 
-  constructor(private appName: string = "Talktosomto") {
+  constructor(private appName: string = "CMS - Talktosomto") {
     this.sender = `${this.appName} <no-reply@talktosomto.xyz>`;
     this.resend = new Resend(process.env.RESEND_API_KEY);
   }
@@ -42,7 +42,7 @@ class MailService {
         subject: "Reset your CMS password",
         to,
         text: `Open this link to reset your CMS password: ${url}`,
-        html: `<p>Open this link to reset your CMS password:</p><p><a href="${url}">${url}</a></p><p>This link is valid for 15 minutes.</p>`,
+        html: `<p>Open <a href="${url}">this link</a> to reset your CMS password:</p><p></p><p>This link is valid for 15 minutes.</p>`,
       });
     } catch (error) {
       console.error("[error_sending_password_reset_email]: ", error);

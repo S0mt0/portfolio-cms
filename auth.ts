@@ -105,9 +105,8 @@ export const auth = betterAuth({
           fetch("https://api.github.com/user/emails", { headers }),
         ]);
 
-        if (!profileResponse.ok) {
+        if (!profileResponse.ok)
           throw new Error("Failed to fetch GitHub profile");
-        }
 
         const profile = await profileResponse.json();
 
