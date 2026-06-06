@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth/minimal";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
+import { magicLink } from "better-auth/plugins";
 
 import { BASE_URL } from "@/lib/constants";
 import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
@@ -60,31 +61,6 @@ export const auth = betterAuth({
         input: false,
         required: false,
       },
-    },
-  },
-
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: true,
-    resetPasswordTokenExpiresIn: 60 * 15,
-    sendResetPassword: async ({ user, url }) => {
-      await mailService.sendResetPasswordEmail({
-        to: user.email,
-        url,
-      });
-    },
-  },
-
-  emailVerification: {
-    sendOnSignUp: true,
-    autoSignInAfterVerification: true,
-    expiresIn: 60 * 60,
-    sendVerificationEmail: async ({ user, url, token }) => {
-      await mailService.sendVerificationEmail({
-        to: user.email,
-        url,
-        token,
-      });
     },
   },
 
@@ -162,5 +138,21 @@ export const auth = betterAuth({
     },
   },
 
-  plugins: [nextCookies()],
+  plugins: [
+    magicLink({
+      sendMagicLink: async ({ email, url }) => {
+        if (!isAllowedAdminEmail(email)) {
+          throw new Error("This CMS is private. Use an allowlisted email.");
+        }
+
+        console.log({ url });
+
+        await mailService.sendMagicLinkEmail({
+          to: email,
+          url,
+        });
+      },
+    }),
+    nextCookies(),
+  ],
 });

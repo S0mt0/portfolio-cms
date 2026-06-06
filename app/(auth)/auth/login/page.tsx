@@ -1,17 +1,17 @@
 import { Suspense } from "react";
 
 import { AuthShell } from "../_components/auth-shell";
-import { LoginForm } from "../_components/login-form";
+import { MagicLinkForm } from "../_components/magic-link-form";
 
 export default function LoginPage() {
   return (
     <AuthShell
-      eyebrow="Welcome back"
+      eyebrow="Welcome in"
       title="Open the studio."
-      note="Sign in with an allowlisted admin email. The CMS stays private until the public portfolio needs an update."
+      note="Use Google, GitHub, or a one-time email link. The CMS only opens for allowlisted admin identities."
     >
       <Suspense>
-        <LoginForm />
+        <MagicLinkForm />
       </Suspense>
     </AuthShell>
   );

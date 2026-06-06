@@ -42,7 +42,7 @@ export default async function AuthErrorPage({
   const copy = errorCopy[provider ?? code] ?? {
     title: "Something interrupted sign in.",
     message:
-      "The provider returned an error before the CMS could open. Try again, or use email and password if the issue keeps happening.",
+      "The provider returned an error before the CMS could open. Try again, or use a one-time email link if the issue keeps happening.",
     hint: "Check the callback URL, provider settings, and admin allowlist.",
   };
 

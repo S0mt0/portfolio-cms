@@ -16,36 +16,16 @@ class MailService {
     } as CreateEmailOptions);
   }
 
-  async sendVerificationEmail({
-    to,
-    url,
-  }: {
-    to: string;
-    url: string;
-    token?: string;
-  }) {
+  async sendMagicLinkEmail({ to, url }: { to: string; url: string }) {
     try {
       await this.sendMail({
-        subject: "Verify your email address",
+        subject: "Open your portfolio CMS",
         to,
-        text: `Open this link to verify your CMS email: ${url}`,
-        html: `<p>Open <a href="${url}">this link</a> to verify your CMS email</p>`,
+        text: `Open this link to sign in to the CMS: ${url}`,
+        html: `<p>Open <a href="${url}">this sign-in link</a> to access the CMS.</p><p>This link expires in 5 minutes and can only be used once.</p>`,
       });
     } catch (error) {
-      console.error("[error_sending_account_verification_email]: ", error);
-    }
-  }
-
-  async sendResetPasswordEmail({ to, url }: { to: string; url: string }) {
-    try {
-      await this.sendMail({
-        subject: "Reset your CMS password",
-        to,
-        text: `Open this link to reset your CMS password: ${url}`,
-        html: `<p>Open <a href="${url}">this link</a> to reset your CMS password:</p><p></p><p>This link is valid for 15 minutes.</p>`,
-      });
-    } catch (error) {
-      console.error("[error_sending_password_reset_email]: ", error);
+      console.error("[error_sending_magic_link_email]: ", error);
     }
   }
 }
