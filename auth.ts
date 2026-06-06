@@ -3,10 +3,7 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 
 import { BASE_URL } from "@/lib/constants";
-import {
-  GITHUB_PLACEHOLDER_EMAIL_DOMAIN,
-  isAllowedAdminUser,
-} from "@/lib/auth/allowlist";
+import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
 import { db, client } from "@/lib/db/config";
 import { mailService } from "@/lib/services/mail.service";
 
@@ -20,7 +17,7 @@ export const auth = betterAuth({
     user: {
       create: {
         async before(user) {
-          if (!isAllowedAdminUser(user)) {
+          if (!isAllowedAdminEmail(user.email)) {
             throw new Error(
               "This CMS is private. Use an allowlisted admin email or GitHub account."
             );
@@ -95,18 +92,63 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      mapProfileToUser: (profile) => {
+
+      async getUserInfo(token) {
+        const headers = {
+          Authorization: `Bearer ${token.accessToken}`,
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+        };
+
+        const [profileResponse, emailsResponse] = await Promise.all([
+          fetch("https://api.github.com/user", { headers }),
+          fetch("https://api.github.com/user/emails", { headers }),
+        ]);
+
+        if (!profileResponse.ok) {
+          throw new Error("Failed to fetch GitHub profile");
+        }
+
+        const profile = await profileResponse.json();
+
+        let emails: Array<{
+          email: string;
+          primary: boolean;
+          verified: boolean;
+          visibility: "public" | "private" | null;
+        }> = [];
+
+        if (emailsResponse.ok) emails = await emailsResponse.json();
+
+        const primaryVerifiedEmail =
+          emails.find((email) => email.primary && email.verified) ??
+          emails.find((email) => email.verified) ??
+          null;
+
         const githubId = String(profile.id);
+        const githubLogin = String(profile.login ?? githubId);
+
+        const fallbackEmail = `${githubId}@github.placeholder.local`;
 
         return {
-          name: profile.name || profile.login || "GitHub user",
-          email:
-            profile.email ?? `${githubId}@${GITHUB_PLACEHOLDER_EMAIL_DOMAIN}`,
-          image: profile.avatar_url,
-          provider: "github",
-          githubId,
-          githubLogin: profile.login,
-          emailVerified: true,
+          user: {
+            id: githubId,
+            name: profile.name || githubLogin,
+            email: (primaryVerifiedEmail?.email ?? fallbackEmail).toLowerCase(),
+            emailVerified:
+              primaryVerifiedEmail?.verified ||
+              Boolean(primaryVerifiedEmail?.email),
+            image: profile.avatar_url,
+
+            provider: "github",
+            githubId,
+            githubLogin,
+          },
+
+          data: {
+            ...profile,
+            emails,
+          },
         };
       },
     },

@@ -19,7 +19,6 @@ export function SocialButtons() {
       provider,
       callbackURL,
       errorCallbackURL: `/auth/error?provider=${provider}`,
-      scopes: provider === "github" ? ["user:email"] : undefined,
     });
     setPending(null);
   }
