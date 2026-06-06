@@ -1,3 +1,5 @@
+import { BASE_URL } from "../constants";
+
 export const AUTH_ROUTES = [
   "/auth/login",
   "/auth/signup",
@@ -5,6 +7,13 @@ export const AUTH_ROUTES = [
   "/auth/reset-password",
   "/auth/verify-email",
   "/auth/error",
+] as const;
+
+export const GUEST_ONLY_AUTH_ROUTES = [
+  "/auth/login",
+  "/auth/signup",
+  "/auth/forgot-password",
+  "/auth/reset-password",
 ] as const;
 
 export const PUBLIC_ROUTES = ["/api/auth"] as const;
@@ -15,6 +24,10 @@ export function isAuthRoute(pathname: string) {
   return AUTH_ROUTES.some((route) => pathname.startsWith(route));
 }
 
+export function isGuestOnlyAuthRoute(pathname: string) {
+  return GUEST_ONLY_AUTH_ROUTES.some((route) => pathname.startsWith(route));
+}
+
 export function isPublicRoute(pathname: string) {
   return PUBLIC_ROUTES.some((route) => pathname.startsWith(route));
 }
@@ -23,8 +36,8 @@ export function getSafeCallbackUrl(value?: string | null) {
   if (!value) return DEFAULT_AUTH_REDIRECT;
 
   try {
-    const url = new URL(value, "http://portfolio-cms.local");
-    if (url.origin !== "http://portfolio-cms.local") return DEFAULT_AUTH_REDIRECT;
+    const url = new URL(value, BASE_URL);
+    if (url.origin !== BASE_URL) return DEFAULT_AUTH_REDIRECT;
     return `${url.pathname}${url.search}${url.hash}`;
   } catch {
     return DEFAULT_AUTH_REDIRECT;

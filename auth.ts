@@ -3,7 +3,10 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 
 import { BASE_URL } from "@/lib/constants";
-import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
+import {
+  GITHUB_PLACEHOLDER_EMAIL_DOMAIN,
+  isAllowedAdminUser,
+} from "@/lib/auth/allowlist";
 import { db, client } from "@/lib/db/config";
 import { mailService } from "@/lib/services/mail.service";
 
@@ -17,9 +20,9 @@ export const auth = betterAuth({
     user: {
       create: {
         async before(user) {
-          if (!isAllowedAdminEmail(user.email)) {
+          if (!isAllowedAdminUser(user)) {
             throw new Error(
-              "This CMS is private. Use an allowlisted admin email."
+              "This CMS is private. Use an allowlisted admin email or GitHub account."
             );
           }
 
@@ -40,7 +43,25 @@ export const auth = betterAuth({
         type: "string",
         input: false,
         required: false,
-        defaultValue: "admin",
+        defaultValue: "user",
+      },
+
+      provider: {
+        type: "string",
+        input: false,
+        required: false,
+      },
+
+      githubId: {
+        type: "string",
+        input: false,
+        required: false,
+      },
+
+      githubLogin: {
+        type: "string",
+        input: false,
+        required: false,
       },
     },
   },
@@ -74,32 +95,18 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-      async getUserInfo(token) {
-        const headers = {
-          Authorization: `Bearer ${token.accessToken}`,
-          Accept: "application/vnd.github+json",
-        };
-        const [profileResponse, emailsResponse] = await Promise.all([
-          fetch("https://api.github.com/user", { headers }),
-          fetch("https://api.github.com/user/emails", { headers }),
-        ]);
-        const profile = await profileResponse.json();
-        const emails = emailsResponse.ok ? await emailsResponse.json() : [];
-        const primaryEmail = Array.isArray(emails)
-          ? emails.find((email) => email.primary && email.verified)?.email ??
-            emails.find((email) => email.verified)?.email
-          : null;
-        const email = profile.email || primaryEmail || "";
+      mapProfileToUser: (profile) => {
+        const githubId = String(profile.id);
 
         return {
-          user: {
-            id: String(profile.id),
-            name: profile.name || profile.login || "GitHub user",
-            email,
-            emailVerified: Boolean(email),
-            image: profile.avatar_url,
-          },
-          data: profile,
+          name: profile.name || profile.login || "GitHub user",
+          email:
+            profile.email ?? `${githubId}@${GITHUB_PLACEHOLDER_EMAIL_DOMAIN}`,
+          image: profile.avatar_url,
+          provider: "github",
+          githubId,
+          githubLogin: profile.login,
+          emailVerified: true,
         };
       },
     },
@@ -107,6 +114,10 @@ export const auth = betterAuth({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: (profile) => ({
+        image: profile.picture,
+        provider: "google",
+      }),
     },
   },
 

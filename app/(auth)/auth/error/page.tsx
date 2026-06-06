@@ -4,36 +4,47 @@ import { Button } from "@/components/ui/button";
 
 import { AuthShell } from "../_components/auth-shell";
 
-const errorCopy: Record<string, { title: string; message: string; hint: string }> = {
+const errorCopy: Record<
+  string,
+  { title: string; message: string; hint: string }
+> = {
   email_not_found: {
-    title: "GitHub did not share an email.",
+    title: "Your provider did not share an email.",
     message:
-      "GitHub can hide your email unless the sign-in request includes email access. The CMS asks for that scope now and will only accept a verified GitHub email.",
-    hint: "Try GitHub again and approve email access. Then make sure that verified email is inside DEFAULT_ADMIN_EMAILS.",
+      "Some providers can hide email addresses. GitHub can still sign in through a reserved placeholder email when the account itself is allowlisted.",
+    hint: "For GitHub, add your stable GitHub ID to DEFAULT_ADMIN_GITHUB_IDS or your login to DEFAULT_ADMIN_GITHUB_NAMES.",
   },
+
   unable_to_create_user: {
-    title: "This email cannot enter the CMS.",
+    title: "This account cannot enter the CMS.",
     message:
-      "The CMS is private. New users can only be created when the email is in the admin allowlist.",
-    hint: "Add the email to DEFAULT_ADMIN_EMAILS and try again.",
+      "The CMS is private. New users can only be created when the email or GitHub identity is in the admin allowlist.",
+    hint: "Use DEFAULT_ADMIN_EMAILS for email accounts, or DEFAULT_ADMIN_GITHUB_IDS / DEFAULT_ADMIN_GITHUB_NAMES for GitHub.",
+  },
+
+  github: {
+    title: "This GitHub account cannot enter the CMS.",
+    message:
+      "GitHub did not provide a usable email, so the CMS checks your GitHub identity instead.",
+    hint: "Add the stable numeric GitHub ID to DEFAULT_ADMIN_GITHUB_IDS, or add the login to DEFAULT_ADMIN_GITHUB_NAMES.",
   },
 };
 
 export default async function AuthErrorPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; code?: string }>;
+  searchParams: Promise<{ error?: string; code?: string; provider?: string }>;
 }) {
   const params = await searchParams;
   const code = params.error || params.code || "unknown_error";
-  const copy =
-    errorCopy[code] ??
-    {
-      title: "Something interrupted sign in.",
-      message:
-        "The provider returned an error before the CMS could open. Try again, or use email and password if the issue keeps happening.",
-      hint: "Check the callback URL, provider settings, and allowlisted email.",
-    };
+  const provider = params.provider;
+
+  const copy = errorCopy[provider ?? code] ?? {
+    title: "Something interrupted sign in.",
+    message:
+      "The provider returned an error before the CMS could open. Try again, or use email and password if the issue keeps happening.",
+    hint: "Check the callback URL, provider settings, and admin allowlist.",
+  };
 
   return (
     <AuthShell eyebrow="Hold up" title={copy.title} note={copy.message}>

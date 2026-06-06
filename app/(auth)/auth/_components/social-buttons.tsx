@@ -14,10 +14,11 @@ export function SocialButtons() {
 
   async function signIn(provider: "github" | "google") {
     setPending(provider);
+
     await authClient.signIn.social({
       provider,
       callbackURL,
-      errorCallbackURL: "/auth/error",
+      errorCallbackURL: `/auth/error?provider=${provider}`,
       scopes: provider === "github" ? ["user:email"] : undefined,
     });
     setPending(null);
@@ -25,11 +26,23 @@ export function SocialButtons() {
 
   return (
     <div className="grid gap-2 sm:grid-cols-2">
-      <Button type="button" variant="outline" size="lg" onClick={() => signIn("github")} disabled={Boolean(pending)}>
+      <Button
+        type="button"
+        variant="outline"
+        size="lg"
+        onClick={() => signIn("github")}
+        disabled={Boolean(pending)}
+      >
         <span className="text-base font-black">GH</span>
         {pending === "github" ? "Opening..." : "GitHub"}
       </Button>
-      <Button type="button" variant="outline" size="lg" onClick={() => signIn("google")} disabled={Boolean(pending)}>
+      <Button
+        type="button"
+        variant="outline"
+        size="lg"
+        onClick={() => signIn("google")}
+        disabled={Boolean(pending)}
+      >
         <span className="text-base font-black">G</span>
         {pending === "google" ? "Opening..." : "Google"}
       </Button>
