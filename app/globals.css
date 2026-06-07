@@ -82,14 +82,60 @@ body {
 }
 
 .notebook-grid {
-  background-image:
-    linear-gradient(rgba(17, 24, 39, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, transparent 96px, rgba(216, 76, 60, 0.28) 96px, rgba(216, 76, 60, 0.28) 97px, transparent 97px);
+  background-image: linear-gradient(
+      rgba(17, 24, 39, 0.055) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24px,
+      rgba(216, 76, 60, 0.28) 24px,
+      rgba(216, 76, 60, 0.28) 25px,
+      transparent 25px
+    );
   background-size: 100% 38px, 100% 100%;
 }
 
 .dark .notebook-grid {
-  background-image:
-    linear-gradient(rgba(247, 243, 232, 0.07) 1px, transparent 1px),
-    linear-gradient(90deg, transparent 96px, rgba(255, 116, 100, 0.32) 96px, rgba(255, 116, 100, 0.32) 97px, transparent 97px);
+  background-image: linear-gradient(
+      rgba(247, 243, 232, 0.07) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      transparent 24px,
+      rgba(255, 116, 100, 0.32) 24px,
+      rgba(255, 116, 100, 0.32) 25px,
+      transparent 25px
+    );
+}
+
+@media (min-width: 1024px) {
+  .notebook-grid {
+    background-image: linear-gradient(
+        rgba(17, 24, 39, 0.055) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        transparent 96px,
+        rgba(216, 76, 60, 0.28) 96px,
+        rgba(216, 76, 60, 0.28) 97px,
+        transparent 97px
+      );
+  }
+
+  .dark .notebook-grid {
+    background-image: linear-gradient(
+        rgba(247, 243, 232, 0.07) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        transparent 96px,
+        rgba(255, 116, 100, 0.32) 96px,
+        rgba(255, 116, 100, 0.32) 97px,
+        transparent 97px
+      );
+  }
 }

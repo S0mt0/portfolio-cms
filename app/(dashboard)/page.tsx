@@ -1,59 +1,102 @@
-import { BookOpen, FileText, FolderKanban, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BookOpen,
+  FolderKanban,
+  Layers3,
+  MessageSquareText,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
 
-const modules = [
+import { Button } from "@/components/ui/button";
+import { landingRepository } from "@/lib/db/repositories/landing.repository";
+
+import { ModuleCard } from "./_components/module-card";
+
+const quickLinks = [
   {
-    title: "Profile",
-    description: "Keep the story, hero copy, and public identity sharp.",
-    icon: Sparkles,
-    color: "bg-blush",
+    title: "Landing page",
+    href: "/landing",
+    description: "Hero, featured works, featured notes, current study, toolbox.",
+    icon: Layers3,
+    color: "bg-honey/45",
   },
   {
-    title: "Works",
-    description: "Curate builds with links, proof, stacks, and plain-language notes.",
+    title: "Profile",
+    href: "/profile",
+    description: "Identity, personal copy, CV link, and public positioning.",
+    icon: Sparkles,
+    color: "bg-blush/40",
+  },
+  {
+    title: "Builds",
+    href: "/builds",
+    description: "Projects, links, proof notes, stack tags, and feature flags.",
     icon: FolderKanban,
-    color: "bg-honey",
+    color: "bg-sky/45",
   },
   {
     title: "Notes",
-    description: "Draft essays, security notes, and articles before they go live.",
+    href: "/notes",
+    description: "Draft and publish articles with the Tiptap editor.",
     icon: BookOpen,
-    color: "bg-mint",
-  },
-  {
-    title: "Pages",
-    description: "Manage route sections as the dashboard grows beyond auth.",
-    icon: FileText,
-    color: "bg-sky",
+    color: "bg-mint/45",
   },
 ];
 
-export default function DashboardHomePage() {
+export default async function DashboardHomePage() {
+  const landing = await landingRepository.get();
+
   return (
     <div className="space-y-10">
-      <section className="max-w-3xl">
-        <p className="font-script text-3xl text-tomato">CMS home</p>
-        <h1 className="mt-2 text-5xl font-black tracking-tight text-ink sm:text-6xl">
-          A small desk for public proof.
-        </h1>
-        <p className="mt-5 text-lg leading-8 text-ink/65">
-          Auth is now the front door. The next pass can turn each portfolio section into editable routes, with Mongo repositories behind every content model.
-        </p>
+      <section className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+        <div>
+          <p className="font-script text-3xl text-tomato">CMS desk</p>
+          <h1 className="mt-2 max-w-4xl text-5xl font-black tracking-tight text-ink sm:text-6xl">
+            Keep the portfolio clear, current, and human.
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/65">
+            This dashboard is organized by the same sections people see on the
+            public site. Start with the landing page, then keep deeper pages
+            tidy as the proof grows.
+          </p>
+        </div>
+
+        <ModuleCard className="bg-paper/70">
+          <MessageSquareText className="size-6 text-tomato" />
+          <p className="mt-8 font-mono text-xs font-black uppercase tracking-[0.18em] text-ink/45">
+            current landing headline
+          </p>
+          <h2 className="mt-2 text-2xl font-black tracking-tight">
+            {landing.hero.headline}
+          </h2>
+          <Button asChild className="mt-6">
+            <Link href="/landing/hero">
+              Edit hero
+              <ArrowRight />
+            </Link>
+          </Button>
+        </ModuleCard>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2">
-        {modules.map((module) => {
-          const Icon = module.icon;
+        {quickLinks.map((item) => {
+          const Icon = item.icon;
+
           return (
-            <article
-              key={module.title}
-              className="rounded-2xl border border-ink/15 bg-paper/80 p-5 shadow-[0_14px_30px_rgba(17,24,39,0.06)]"
-            >
-              <div className={`mb-10 flex size-11 items-center justify-center rounded-2xl border border-ink/15 ${module.color}`}>
-                <Icon className="size-5" />
-              </div>
-              <h2 className="text-2xl font-black">{module.title}</h2>
-              <p className="mt-2 text-sm leading-6 text-ink/65">{module.description}</p>
-            </article>
+            <ModuleCard key={item.href} className={item.color}>
+              <Icon className="size-6" />
+              <h2 className="mt-8 text-2xl font-black">{item.title}</h2>
+              <p className="mt-2 min-h-14 text-sm leading-6 text-ink/65">
+                {item.description}
+              </p>
+              <Button asChild className="mt-6" variant="outline">
+                <Link href={item.href}>
+                  Open
+                  <ArrowRight />
+                </Link>
+              </Button>
+            </ModuleCard>
           );
         })}
       </section>

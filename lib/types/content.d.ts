@@ -13,6 +13,56 @@ export interface ProfileContent extends CmsDocumentBase {
   cvUrl?: string;
 }
 
+export interface LandingSnapshotItem {
+  label: string;
+  value: string;
+}
+
+export interface LandingCta {
+  label: string;
+  href: string;
+}
+
+export interface LandingSkillGroup {
+  title: string;
+  skills: string[];
+}
+
+export interface LandingContent extends CmsDocumentBase {
+  key: "landing";
+  hero: {
+    pageLabel: string;
+    greeting: string;
+    headline: string;
+    intro: string;
+    portraitImageUrl: string;
+    primaryCta: LandingCta;
+    secondaryCta: LandingCta;
+    snapshots: LandingSnapshotItem[];
+  };
+  selectedWorks: {
+    eyebrow: string;
+    title: string;
+    linkLabel: string;
+    linkHref: string;
+    featuredIndexes: string[];
+  };
+  selectedNotes: {
+    eyebrow: string;
+    title: string;
+    linkLabel: string;
+    linkHref: string;
+    featuredSlugs: string[];
+  };
+  aside: {
+    studyTitle: string;
+    studyDescription: string;
+    studyItems: string[];
+    toolboxTitle: string;
+    skillGroups: LandingSkillGroup[];
+  };
+}
+
 export interface ExperienceContent extends CmsDocumentBase {
   role: string;
   company: string;

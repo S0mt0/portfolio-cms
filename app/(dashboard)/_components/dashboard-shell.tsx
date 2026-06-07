@@ -1,9 +1,25 @@
 "use client";
 
 import type { User } from "better-auth";
-import { BookOpen, BriefcaseBusiness, FolderKanban, Gamepad2, Home, LogOut, Mail, Sparkles } from "lucide-react";
+import {
+  BookOpen,
+  BriefcaseBusiness,
+  FolderKanban,
+  Gamepad2,
+  Home,
+  Image,
+  Layers3,
+  LogOut,
+  Mail,
+  Menu,
+  NotebookText,
+  PanelRight,
+  Sparkles,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
@@ -12,6 +28,17 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { label: "Home", href: "/", icon: Home },
+  {
+    label: "Landing",
+    href: "/landing",
+    icon: Layers3,
+    children: [
+      { label: "Hero", href: "/landing/hero", icon: Image },
+      { label: "Works", href: "/landing/works", icon: FolderKanban },
+      { label: "Notes", href: "/landing/notes", icon: NotebookText },
+      { label: "Aside", href: "/landing/aside", icon: PanelRight },
+    ],
+  },
   { label: "Profile", href: "/profile", icon: Sparkles },
   { label: "Experience", href: "/experience", icon: BriefcaseBusiness },
   { label: "Builds", href: "/builds", icon: FolderKanban },
@@ -29,6 +56,7 @@ export function DashboardShell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   async function signOut() {
     await authClient.signOut();
@@ -36,56 +64,132 @@ export function DashboardShell({
     router.refresh();
   }
 
+  const sidebar = (
+    <>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex size-11 items-center justify-center rounded-2xl border border-ink/15 bg-honey font-black">
+            S
+          </div>
+          <div>
+            <p className="font-script text-2xl leading-none">Somto</p>
+            <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.25em] text-ink/50">
+              portfolio cms
+            </p>
+          </div>
+        </div>
+        <ThemeToggle />
+      </div>
+
+      <nav className="mt-8 grid gap-1">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const active =
+            item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const children = "children" in item ? item.children ?? [] : [];
+
+          return (
+            <div key={item.href}>
+              <Link
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-bold text-ink/65 transition hover:bg-ink/5 hover:text-ink",
+                  active && "bg-ink text-paper hover:bg-ink hover:text-paper"
+                )}
+              >
+                <Icon className="size-4" />
+                {item.label}
+              </Link>
+              {children.length && active ? (
+                <div className="ml-5 mt-1 grid gap-1 border-l border-ink/10 pl-3">
+                  {children.map((child) => {
+                    const ChildIcon = child.icon;
+                    const childActive = pathname === child.href;
+
+                    return (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setOpen(false)}
+                        className={cn(
+                          "flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold text-ink/55 transition hover:bg-ink/5 hover:text-ink",
+                          childActive && "bg-ink/10 text-ink"
+                        )}
+                      >
+                        <ChildIcon className="size-3.5" />
+                        {child.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          );
+        })}
+      </nav>
+
+      <div className="mt-8 border-t border-ink/10 pt-4 lg:absolute lg:bottom-4 lg:left-4 lg:right-4">
+        <p className="truncate text-sm font-bold">{user.name}</p>
+        <p className="truncate text-xs text-ink/55">{user.email}</p>
+        <Button className="mt-3 w-full" variant="outline" onClick={signOut}>
+          <LogOut />
+          Sign out
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <main className="min-h-dvh bg-paper text-ink">
       <div className="notebook-grid min-h-dvh">
-        <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-5 py-5 lg:flex-row lg:gap-8 lg:px-8">
-          <aside className="mb-5 rounded-3xl border border-ink/15 bg-paper/85 p-4 lg:sticky lg:top-5 lg:mb-0 lg:h-[calc(100dvh-2.5rem)] lg:w-72">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="flex size-11 items-center justify-center rounded-2xl border border-ink/15 bg-honey font-black">
-                  S
-                </div>
-                <div>
-                  <p className="font-script text-2xl leading-none">Somto</p>
-                  <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.25em] text-ink/50">
-                    portfolio cms
-                  </p>
-                </div>
-              </div>
-              <ThemeToggle />
+        <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col py-4 pl-12 pr-4 sm:px-5 lg:flex-row lg:gap-8 lg:px-8">
+          <header className="mb-4 flex items-center justify-between rounded-2xl border border-ink/15 bg-paper/90 p-3 lg:hidden">
+            <div>
+              <p className="font-script text-2xl leading-none">Somto</p>
+              <p className="font-mono text-[0.65rem] font-bold uppercase tracking-[0.22em] text-ink/50">
+                portfolio cms
+              </p>
             </div>
+            <Button
+              type="button"
+              size="icon"
+              variant="outline"
+              aria-label="Open navigation"
+              onClick={() => setOpen(true)}
+            >
+              <Menu />
+            </Button>
+          </header>
 
-            <nav className="mt-8 grid gap-1">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-bold text-ink/65 transition hover:bg-ink/5 hover:text-ink",
-                      active && "bg-ink text-paper hover:bg-ink hover:text-paper"
-                    )}
-                  >
-                    <Icon className="size-4" />
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <div className="mt-8 border-t border-ink/10 pt-4 lg:absolute lg:bottom-4 lg:left-4 lg:right-4">
-              <p className="truncate text-sm font-bold">{user.name}</p>
-              <p className="truncate text-xs text-ink/55">{user.email}</p>
-              <Button className="mt-3 w-full" variant="outline" onClick={signOut}>
-                <LogOut />
-                Sign out
-              </Button>
-            </div>
+          <aside className="hidden rounded-3xl border border-ink/15 bg-paper/85 p-4 lg:sticky lg:top-5 lg:block lg:h-[calc(100dvh-2.5rem)] lg:w-72">
+            {sidebar}
           </aside>
+
+          {open ? (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              <button
+                type="button"
+                aria-label="Close navigation"
+                className="absolute inset-0 bg-ink/35"
+                onClick={() => setOpen(false)}
+              />
+              <aside className="absolute bottom-0 left-0 top-0 w-[min(21rem,88vw)] border-r border-ink/15 bg-paper p-4 shadow-2xl">
+                <div className="mb-4 flex justify-end">
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="outline"
+                    aria-label="Close navigation"
+                    onClick={() => setOpen(false)}
+                  >
+                    <X />
+                  </Button>
+                </div>
+                {sidebar}
+              </aside>
+            </div>
+          ) : null}
 
           <section className="flex-1 py-5 lg:py-10">{children}</section>
         </div>

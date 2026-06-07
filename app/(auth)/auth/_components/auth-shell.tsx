@@ -17,7 +17,10 @@ export function AuthShell({ children, eyebrow, title, note }: AuthShellProps) {
             <div className="absolute right-16 top-24 h-24 w-40 rotate-[-7deg] rounded-[55%_45%_60%_40%] border border-ink/20 bg-blush" />
             <div className="absolute bottom-16 left-14 h-36 w-56 rotate-3 rounded-[45%_55%_42%_58%] border border-ink/20 bg-sky" />
             <div className="relative z-10 flex h-full flex-col justify-between">
-              <Link href="/" className="w-fit font-mono text-xs font-bold uppercase tracking-[0.28em]">
+              <Link
+                href="/"
+                className="w-fit font-mono text-xs font-bold uppercase tracking-[0.28em]"
+              >
                 Somto CMS
               </Link>
               <div className="max-w-md">
@@ -28,7 +31,8 @@ export function AuthShell({ children, eyebrow, title, note }: AuthShellProps) {
                   Keep the portfolio honest.
                 </h1>
                 <p className="mt-6 max-w-sm text-lg leading-8 text-ink/70">
-                  A small workspace for proof, notes, projects, and the parts of the story that need care before they go public.
+                  A small workspace for proof, notes, projects, and the parts of
+                  the story that need care before they go public.
                 </p>
               </div>
             </div>
@@ -36,11 +40,18 @@ export function AuthShell({ children, eyebrow, title, note }: AuthShellProps) {
 
           <section className="mx-auto flex w-full max-w-md flex-col justify-center">
             <div className="mb-8">
-              <Link href="/" className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-ink/55 lg:hidden">
+              <Link
+                href="/"
+                className="font-mono text-xs font-bold uppercase tracking-[0.28em] text-ink/55 lg:hidden"
+              >
                 Somto CMS
               </Link>
-              <p className="mt-8 font-script text-3xl text-tomato lg:mt-0">{eyebrow}</p>
-              <h1 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">{title}</h1>
+              <p className="mt-8 font-script text-3xl text-tomato lg:mt-0">
+                {eyebrow}
+              </p>
+              <h1 className="mt-2 text-4xl font-black tracking-tight sm:text-5xl">
+                {title}
+              </h1>
               <p className="mt-4 text-base leading-7 text-ink/65">{note}</p>
             </div>
             {children}

@@ -7,7 +7,7 @@ export const AUTH_ROUTES = [
 
 export const GUEST_ONLY_AUTH_ROUTES = ["/auth/login"] as const;
 
-export const PUBLIC_ROUTES = ["/api/auth"] as const;
+export const PUBLIC_ROUTES = ["/api/auth", "/api/public"] as const;
 
 export const DEFAULT_AUTH_REDIRECT = "/";
 
