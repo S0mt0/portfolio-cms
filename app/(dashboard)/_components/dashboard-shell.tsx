@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "better-auth";
+import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -27,7 +28,25 @@ import { authClient } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-const navItems = [
+type NavChild =
+  | {
+      label: string;
+      href: string;
+      icon: LucideIcon;
+    }
+  | {
+      kind: "separator";
+      label: string;
+    };
+
+type NavItem = {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  children?: NavChild[];
+};
+
+const navItems: NavItem[] = [
   { label: "Dashboard", href: "/", icon: Home },
   {
     label: "Landing",
@@ -43,7 +62,16 @@ const navItems = [
   { label: "Profile", href: "/profile", icon: Sparkles },
   { label: "Experience", href: "/experience", icon: BriefcaseBusiness },
   { label: "Builds", href: "/builds", icon: FolderKanban },
-  { label: "Notes", href: "/notes", icon: BookOpen },
+  {
+    label: "Notes",
+    href: "/notes",
+    icon: BookOpen,
+    children: [
+      { label: "Hero", href: "/notes/hero", icon: Sparkles },
+      { kind: "separator", label: "Manage notes" },
+      { label: "Notes", href: "/notes/manage", icon: NotebookText },
+    ],
+  },
   { label: "Contact", href: "/contact", icon: Mail },
   { label: "Extra", href: "/extra", icon: Gamepad2 },
 ];
@@ -61,7 +89,7 @@ export function DashboardShell({
 
   async function signOut() {
     await authClient.signOut();
-    router.push("/auth/login");
+    router.push(`/auth/login?callbackUrl=${pathname}`);
     router.refresh();
   }
 
@@ -69,7 +97,7 @@ export function DashboardShell({
     <>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl border border-ink/15 bg-honey font-black overflow-hidden">
+          <div className="flex size-8 items-center justify-center rounded-xl border border-ink/15 bg-honey font-black overflow-hidden">
             {/* S */}
             <Image
               alt="Logo avatar"
@@ -95,7 +123,7 @@ export function DashboardShell({
             item.href === "/"
               ? pathname === "/"
               : pathname.startsWith(item.href);
-          const children = "children" in item ? item.children ?? [] : [];
+          const children = item.children ?? [];
 
           return (
             <div key={item.href}>
@@ -113,6 +141,17 @@ export function DashboardShell({
               {children.length && active ? (
                 <div className="ml-5 mt-1 grid gap-1 border-l border-ink/10 pl-3">
                   {children.map((child) => {
+                    if ("kind" in child) {
+                      return (
+                        <p
+                          key={child.label}
+                          className="px-3 pt-3 pb-1 font-mono text-[0.62rem] font-black uppercase tracking-[0.28em] text-ink/35"
+                        >
+                          {child.label}
+                        </p>
+                      );
+                    }
+
                     const ChildIcon = child.icon;
                     const childActive = pathname === child.href;
 

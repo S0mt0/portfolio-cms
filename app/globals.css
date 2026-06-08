@@ -1,3 +1,6 @@
+@import '../styles/_variables.scss';
+@import '../styles/_keyframe-animations.scss';
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -138,4 +141,86 @@ body {
         transparent 97px
       );
   }
+}
+
+.notes-editor h1,
+.notes-editor h2,
+.notes-editor h3,
+.notes-editor h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.notes-editor h1 {
+  font-size: 2rem;
+}
+
+.notes-editor h2 {
+  font-size: 1.65rem;
+}
+
+.notes-editor h3 {
+  font-size: 1.35rem;
+}
+
+.notes-editor h4 {
+  font-size: 1.1rem;
+  letter-spacing: 0;
+}
+
+.notes-editor p {
+  margin-block: 0.85rem;
+}
+
+.notes-editor .is-editor-empty:first-child::before,
+.notes-editor .is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: color-mix(in srgb, var(--ink) 38%, transparent);
+}
+
+.notes-editor ul,
+.notes-editor ol {
+  margin-block: 1rem;
+  padding-left: 1.35rem;
+}
+
+.notes-editor ul {
+  list-style: disc;
+}
+
+.notes-editor ol {
+  list-style: decimal;
+}
+
+.notes-editor blockquote {
+  margin-block: 1.25rem;
+  border-left: 3px solid var(--tomato);
+  padding-left: 1rem;
+  color: var(--muted-ink);
+}
+
+.notes-editor pre {
+  margin-block: 1rem;
+  overflow-x: auto;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+
+.notes-editor iframe {
+  margin-block: 1.25rem;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
 }

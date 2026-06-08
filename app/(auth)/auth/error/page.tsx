@@ -39,7 +39,7 @@ export default async function AuthErrorPage({
   const code = params.error || params.code || "unknown_error";
   const provider = params.provider;
 
-  const copy = errorCopy[provider ?? code] ?? {
+  const copy = errorCopy[code ?? provider] ?? {
     title: "Something interrupted sign in.",
     message:
       "The provider returned an error before the CMS could open. Try again, or use a one-time email link if the issue keeps happening.",

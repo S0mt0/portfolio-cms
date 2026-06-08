@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
+  NumberField,
   SaveButton,
   TextareaField,
   TextField,
@@ -23,11 +24,13 @@ const toPayload = ({
   title,
   linkLabel,
   linkHref,
+  featuredCount,
 }: NotesFormProps): TLandingSelectedNotesSchema => ({
   eyebrow,
   title,
   linkLabel,
   linkHref,
+  featuredCount,
 });
 
 export function NotesForm(props: NotesFormProps) {
@@ -84,6 +87,15 @@ export function NotesForm(props: NotesFormProps) {
           }
         />
       </div>
+      <NumberField
+        label="Featured notes count"
+        defaultValue={formData.featuredCount}
+        max={10}
+        hint="The public endpoint will return up to this many featured note records."
+        onChange={(featuredCount) =>
+          setFormData((prev) => ({ ...prev, featuredCount }))
+        }
+      />
       <p className="rounded-xl border border-ink/10 bg-muted/30 px-4 py-3 text-sm leading-6 text-ink/60">
         Featured notes will come from note records marked as featured. This page
         only controls the section copy and archive link.

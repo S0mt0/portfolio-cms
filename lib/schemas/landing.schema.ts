@@ -54,6 +54,7 @@ export const LandingSelectedWorksSchema = z.object({
     .trim()
     .min(1, { message: "Link href is required" })
     .max(180, { message: "Link href must be 180 characters or less" }),
+  featuredCount: z.number().max(10).default(2),
 });
 
 export const LandingSelectedNotesSchema = LandingSelectedWorksSchema;

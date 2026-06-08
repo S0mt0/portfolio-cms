@@ -46,17 +46,14 @@ export const defaultLandingContent: Omit<
     title: "Small proof I can explain",
     linkLabel: "All builds",
     linkHref: "/builds",
-    featuredIndexes: ["001", "002"],
+    featuredCount: 2,
   },
   selectedNotes: {
     eyebrow: "Selected notes",
     title: "Writing on engineering, Web3, and other fun stuff (maybe)",
     linkLabel: "All notes",
     linkHref: "/notes",
-    featuredSlugs: [
-      "from-fullstack-assumptions-to-protocol-assumptions",
-      "what-i-check-first-in-a-small-solidity-contract",
-    ],
+    featuredCount: 4,
   },
   aside: {
     studyTitle: "Current study",
@@ -75,7 +72,8 @@ export const defaultLandingContent: Omit<
     skillGroups: [
       {
         title: "Build apps",
-        description: "Frameworks, runtimes, APIs, and databases I use for product work.",
+        description:
+          "Frameworks, runtimes, APIs, and databases I use for product work.",
         skills: [
           "Next.js",
           "React",
@@ -91,7 +89,8 @@ export const defaultLandingContent: Omit<
       },
       {
         title: "Shape interfaces",
-        description: "State, forms, validation, styling, and motion tools for clean UI.",
+        description:
+          "State, forms, validation, styling, and motion tools for clean UI.",
         skills: [
           "Zustand",
           "Redux Toolkit",
@@ -105,7 +104,8 @@ export const defaultLandingContent: Omit<
       },
       {
         title: "Work with chains",
-        description: "Web3 and EVM tools I use while growing into protocol work.",
+        description:
+          "Web3 and EVM tools I use while growing into protocol work.",
         skills: [
           "Solidity",
           "Foundry",

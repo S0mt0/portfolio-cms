@@ -36,8 +36,13 @@ export interface NoteContent extends CmsDocumentBase {
   slug: string;
   excerpt: string;
   content: string;
-  status: "draft" | "published";
+  bannerImage?: string;
+  bannerCaption?: string;
+  tags: string[];
+  readTime: string;
+  published: boolean;
   featured: boolean;
+  publishedAt?: Date | null;
 }
 
 export interface ContactContent extends CmsDocumentBase {

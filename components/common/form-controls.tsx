@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { ChangeEvent, RefObject } from "react";
+import { useState, type ChangeEvent, type RefObject } from "react";
 import { ImagePlus, Save, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,13 @@ type FieldProps = {
   className?: string;
   maxLength?: number;
   onChange: (value: string) => void;
+};
+
+type NumberFieldProps = Omit<FieldProps, "defaultValue" | "onChange"> & {
+  defaultValue?: number;
+  max: number;
+  min?: number;
+  onChange: (value: number) => void;
 };
 
 export function TextField({
@@ -74,6 +81,61 @@ export function TextareaField({
         </p>
       ) : null}
       {hint ? <p className="text-xs leading-5 text-ink/55">{hint}</p> : null}
+    </div>
+  );
+}
+
+export function NumberField({
+  label,
+  name,
+  defaultValue = 0,
+  hint,
+  className,
+  max,
+  min = 0,
+  onChange,
+}: NumberFieldProps) {
+  const [value, setValue] = useState(String(defaultValue));
+  const parsedValue = value === "" ? undefined : Number(value);
+  const isAboveMax = parsedValue !== undefined && parsedValue > max;
+  const isBelowMin = parsedValue !== undefined && parsedValue < min;
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const nextValue = event.target.value.replace(/\D/g, "");
+    const nextNumber = nextValue === "" ? undefined : Number(nextValue);
+
+    setValue(nextValue);
+
+    if (nextNumber !== undefined && nextNumber <= max && nextNumber >= min) {
+      onChange(nextNumber);
+    }
+  };
+
+  return (
+    <div className={cn("space-y-2", className)}>
+      <Label htmlFor={name}>{label}</Label>
+      <Input
+        id={name}
+        name={name}
+        value={value}
+        type="text"
+        inputMode="numeric"
+        pattern="[0-9]*"
+        autoComplete="off"
+        onChange={handleChange}
+        aria-invalid={isAboveMax || isBelowMin}
+      />
+      {hint ? <p className="text-xs leading-5 text-ink/55">{hint}</p> : null}
+      {isAboveMax ? (
+        <p className="rounded-lg border border-tomato/35 bg-tomato/10 px-3 py-2 text-xs font-semibold leading-5 text-tomato">
+          Maximum allowed value is {max}. This value will not be saved.
+        </p>
+      ) : null}
+      {isBelowMin ? (
+        <p className="rounded-lg border border-tomato/35 bg-tomato/10 px-3 py-2 text-xs font-semibold leading-5 text-tomato">
+          Minimum allowed value is {min}. This value will not be saved.
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -170,10 +232,14 @@ export function PublishSwitch({
   checked,
   onChange,
   hint,
+  checkedLabel,
+  unCheckedLabel,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
   hint?: string;
+  checkedLabel?: string;
+  unCheckedLabel?: string;
 }) {
   return (
     <div
@@ -185,11 +251,10 @@ export function PublishSwitch({
       )}
     >
       <div>
-        <Label>{checked ? "Published" : "Draft"}</Label>
+        <Label>
+          {checked ? checkedLabel ?? "Published" : unCheckedLabel ?? "Draft"}
+        </Label>
         {hint ? <p className="text-xs leading-5 text-ink/55">{hint}</p> : null}
-        {/* <p className="text-xs text-muted-foreground">
-          Draft items stay saved but hidden from the website.
-        </p> */}
       </div>
       <Switch
         checked={checked}

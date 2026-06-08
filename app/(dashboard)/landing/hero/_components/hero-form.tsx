@@ -20,7 +20,6 @@ import {
 } from "@/components/common/form-controls";
 import { ModuleCard } from "@/components/common/module-card";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 
 export const HeroForm = (hero: LandingContent["hero"]) => {
   const router = useRouter();

@@ -1,0 +1,147 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+import { requireAdminSession } from "@/lib/auth/guards";
+import { noteRepository } from "@/lib/db/repositories/notes/note.repository";
+import { notesPageRepository } from "@/lib/db/repositories/notes/notes-page.repository";
+import {
+  NoteSchema,
+  NotesHeroSchema,
+  type TNoteSchema,
+  type TNotesHeroSchema,
+} from "@/lib/schemas/note.schema";
+import { generateSlug, getReadTime } from "@/lib/utils";
+
+function revalidateNotes() {
+  revalidatePath("/notes");
+  revalidatePath("/notes/hero");
+  revalidatePath("/notes/manage");
+  revalidatePath("/api/public/landing");
+  revalidatePath("/api/public/notes");
+}
+
+export async function updateNotesHero(values: TNotesHeroSchema) {
+  await requireAdminSession();
+
+  const validated = NotesHeroSchema.safeParse(values);
+  if (!validated.success) {
+    const error = validated.error.issues
+      .map((issue) => issue.message)
+      .join(", ");
+
+    return { error };
+  }
+
+  try {
+    await notesPageRepository.updateHero(validated.data);
+    revalidateNotes();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update notes hero" };
+  }
+}
+
+export async function createNote(values: TNoteSchema) {
+  await requireAdminSession();
+
+  const validated = NoteSchema.safeParse(values);
+
+  if (!validated.success) {
+    const error = validated.error.issues
+      .map((issue) => issue.message)
+      .join(", ");
+
+    return { error };
+  }
+
+  const data = validated.data;
+  const slug = generateSlug(data.title);
+  const existing = await noteRepository.findBySlug(slug);
+
+  if (existing)
+    return { error: "Choose a different and unique title for your note." };
+
+  try {
+    const note = await noteRepository.create({
+      ...data,
+      slug,
+      readTime: getReadTime(data.content.replace(/<[^>]*>/g, " ")),
+      publishedAt: data.published ? new Date() : null,
+    });
+
+    revalidateNotes();
+    return { data: { id: note._id?.toString(), slug: note.slug } };
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not create note" };
+  }
+}
+
+export async function updateNote(id: string, values: TNoteSchema) {
+  await requireAdminSession();
+
+  const validated = NoteSchema.safeParse(values);
+  if (!validated.success) {
+    const error = validated.error.issues
+      .map((issue) => issue.message)
+      .join(", ");
+
+    return { error };
+  }
+
+  const data = validated.data;
+  const slug = generateSlug(data.title);
+  const existing = await noteRepository.findBySlug(slug);
+
+  if (existing && existing._id?.toString() !== id) {
+    return { error: "Choose a different and unique title for your note." };
+  }
+
+  try {
+    const current = await noteRepository.findById(id);
+
+    await noteRepository.updateById(id, {
+      ...data,
+      slug,
+      readTime: getReadTime(data.content.replace(/<[^>]*>/g, " ")),
+      publishedAt: data.published
+        ? current?.publishedAt ?? new Date()
+        : current?.publishedAt ?? null,
+    });
+
+    revalidateNotes();
+    revalidatePath(`/notes/manage/${slug}`);
+    revalidatePath(`/notes/manage/${slug}/edit`);
+    return { data: { id, slug } };
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update note" };
+  }
+}
+
+export async function deleteNote(slug: string) {
+  await requireAdminSession();
+
+  try {
+    await noteRepository.deleteBySlug(slug);
+    revalidateNotes();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not delete note" };
+  }
+}
+
+export async function deleteNotes(slugs: string[]) {
+  await requireAdminSession();
+
+  if (!slugs.length) return { error: "Select at least one note." };
+
+  try {
+    await noteRepository.deleteManyBySlugs(slugs);
+    revalidateNotes();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not delete selected notes" };
+  }
+}

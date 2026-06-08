@@ -6,7 +6,7 @@ type TFile = File | React.ChangeEvent<HTMLInputElement>;
 
 type UploadOptions = {
   onComplete?: (url: string) => void;
-  onError?: (url: string) => void;
+  onError?: (msg: string) => void;
   folder?: S3FileFolders;
   signal?: AbortSignal;
 };

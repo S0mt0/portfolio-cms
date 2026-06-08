@@ -4,7 +4,6 @@ import { NextResponse, type NextRequest } from "next/server";
 import {
   getSafeCallbackUrl,
   isAuthRoute,
-  isGuestOnlyAuthRoute,
   isPublicRoute,
 } from "@/lib/auth/routes";
 
@@ -15,7 +14,7 @@ export function proxy(request: NextRequest) {
   if (isPublicRoute(pathname)) return NextResponse.next();
 
   if (isAuthRoute(pathname)) {
-    if (!sessionCookie || !isGuestOnlyAuthRoute(pathname)) {
+    if (!sessionCookie) {
       return NextResponse.next();
     }
 
