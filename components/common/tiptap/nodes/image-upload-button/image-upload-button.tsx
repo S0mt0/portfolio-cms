@@ -87,7 +87,6 @@ export const ImageUploadButton = forwardRef<
         data-disabled={!canInsert}
         aria-label={label}
         aria-pressed={isActive}
-        onMouseDown={(event) => event.preventDefault()}
         onClick={handleClick}
         {...buttonProps}
         ref={ref}
