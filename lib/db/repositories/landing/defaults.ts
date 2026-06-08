@@ -1,4 +1,4 @@
-import type { LandingContent } from "@/lib/types/content";
+import type { LandingContent } from "../../../types/landing";
 
 export const defaultLandingContent: Omit<
   LandingContent,
@@ -12,14 +12,18 @@ export const defaultLandingContent: Omit<
       "I build web products and backend systems, while growing deeper into smart contract development and security.",
     intro:
       "I build web products end to end. Lately I have been spending more time with Solidity, Foundry, and the small mistakes that make protocol logic unsafe.",
-    portraitImageUrl: "/somto-portrait.jpg",
+    portraitImageUrl: "/dp.png",
     primaryCta: {
       label: "See builds",
       href: "/builds",
+      published: true,
+      variant: "primary",
     },
     secondaryCta: {
       label: "Contact",
       href: "/contact",
+      published: true,
+      variant: "secondary",
     },
     snapshots: [
       {
@@ -32,7 +36,8 @@ export const defaultLandingContent: Omit<
       },
       {
         label: "Open to",
-        value: "Product engineering, Web3 frontend, and early security-facing work.",
+        value:
+          "Product engineering, Web3 frontend, and early security-facing work.",
       },
     ],
   },
@@ -65,9 +70,12 @@ export const defaultLandingContent: Omit<
       "Protocol assumptions",
     ],
     toolboxTitle: "Toolbox",
+    toolboxDescription:
+      "The tools I reach for when I need to build, shape, ship, or study a system properly.",
     skillGroups: [
       {
         title: "Build apps",
+        description: "Frameworks, runtimes, APIs, and databases I use for product work.",
         skills: [
           "Next.js",
           "React",
@@ -83,6 +91,7 @@ export const defaultLandingContent: Omit<
       },
       {
         title: "Shape interfaces",
+        description: "State, forms, validation, styling, and motion tools for clean UI.",
         skills: [
           "Zustand",
           "Redux Toolkit",
@@ -96,6 +105,7 @@ export const defaultLandingContent: Omit<
       },
       {
         title: "Work with chains",
+        description: "Web3 and EVM tools I use while growing into protocol work.",
         skills: [
           "Solidity",
           "Foundry",
@@ -110,6 +120,7 @@ export const defaultLandingContent: Omit<
       },
       {
         title: "Study security",
+        description: "The habits I am building for smart contract review.",
         skills: [
           "Invariant thinking",
           "Access control",

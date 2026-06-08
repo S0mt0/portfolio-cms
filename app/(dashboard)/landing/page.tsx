@@ -1,18 +1,25 @@
-import { ArrowRight, Image, NotebookText, PanelRight, Rows3 } from "lucide-react";
+import {
+  ArrowRight,
+  Image,
+  NotebookText,
+  PanelRight,
+  Rows3,
+} from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { landingRepository } from "@/lib/db/repositories/landing.repository";
+import { landingRepository } from "@/lib/db/repositories/landing/landing.repository";
 
 import { DashboardPageHeader } from "../_components/dashboard-page-header";
-import { ModuleCard } from "../_components/module-card";
+import { ModuleCard } from "../../../components/common/module-card";
 
 const sections = [
   {
     title: "Hero",
     href: "/landing/hero",
     icon: Image,
-    description: "Opening copy, CTA labels, side notes, and floating portrait image.",
+    description:
+      "Opening copy, CTA labels, side notes, and floating portrait image.",
     color: "bg-blush/45",
   },
   {
@@ -33,7 +40,8 @@ const sections = [
     title: "Aside",
     href: "/landing/aside",
     icon: PanelRight,
-    description: "Current study, toolbox groups, and right-column support copy.",
+    description:
+      "Current study, toolbox groups, and right-column support copy.",
     color: "bg-sky/45",
   },
 ];
@@ -46,7 +54,7 @@ export default async function LandingEditorPage() {
       <DashboardPageHeader
         eyebrow="Landing"
         title="Edit the public first page."
-        description="Each block here maps to a visible section on the portfolio landing page. Keep the writing simple, human, and proof-led."
+        description="Each block here maps to a visible section on the portfolio landing page. Keep the writing clear, simple and proof-led."
       />
 
       <div className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">

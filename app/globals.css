@@ -88,10 +88,10 @@ body {
     ),
     linear-gradient(
       90deg,
-      transparent 24px,
-      rgba(216, 76, 60, 0.28) 24px,
-      rgba(216, 76, 60, 0.28) 25px,
-      transparent 25px
+      transparent 14px,
+      rgba(216, 76, 60, 0.28) 14px,
+      rgba(216, 76, 60, 0.28) 15px,
+      transparent 15px
     );
   background-size: 100% 38px, 100% 100%;
 }
@@ -103,10 +103,10 @@ body {
     ),
     linear-gradient(
       90deg,
-      transparent 24px,
-      rgba(255, 116, 100, 0.32) 24px,
-      rgba(255, 116, 100, 0.32) 25px,
-      transparent 25px
+      transparent 14px,
+      rgba(255, 116, 100, 0.32) 14px,
+      rgba(255, 116, 100, 0.32) 15px,
+      transparent 15px
     );
 }
 

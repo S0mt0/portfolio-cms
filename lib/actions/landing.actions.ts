@@ -1,18 +1,18 @@
 "use server";
-
 import { revalidatePath } from "next/cache";
 
-import { landingRepository } from "@/lib/db/repositories/landing.repository";
-import type { LandingSkillGroup } from "@/lib/types/content";
-
-const cleanLines = (value: FormDataEntryValue | null) =>
-  String(value ?? "")
-    .split("\n")
-    .map((item) => item.trim())
-    .filter(Boolean);
-
-const field = (formData: FormData, key: string) =>
-  String(formData.get(key) ?? "").trim();
+import { landingRepository } from "../db/repositories/landing";
+import {
+  HeroSectionSchema,
+  LandingAsideSchema,
+  LandingSelectedNotesSchema,
+  LandingSelectedWorksSchema,
+  TLandingAsideSchema,
+  THeroSectionSchema,
+  TLandingSelectedNotesSchema,
+  TLandingSelectedWorksSchema,
+} from "../schemas/landing.schema";
+import { requireAdminSession } from "../auth/guards";
 
 function revalidateLanding() {
   revalidatePath("/");
@@ -24,107 +24,121 @@ function revalidateLanding() {
   revalidatePath("/api/public/landing");
 }
 
-export async function updateLandingHero(formData: FormData) {
+export async function updateLandingHero(values: THeroSectionSchema) {
+  await requireAdminSession();
+
+  const validated = HeroSectionSchema.safeParse(values);
+  if (!validated.success) return { error: "Invalid fields" };
+
+  const data = validated.data;
+
   const content = await landingRepository.get();
 
-  await landingRepository.update({
-    key: "landing",
-    hero: {
-      ...content.hero,
-      pageLabel: field(formData, "pageLabel"),
-      greeting: field(formData, "greeting"),
-      headline: field(formData, "headline"),
-      intro: field(formData, "intro"),
-      portraitImageUrl: field(formData, "portraitImageUrl"),
-      primaryCta: {
-        label: field(formData, "primaryCtaLabel"),
-        href: field(formData, "primaryCtaHref"),
+  try {
+    await landingRepository.update({
+      key: "landing",
+      hero: {
+        ...content.hero,
+        pageLabel: data.pageLabel,
+        greeting: data.greeting,
+        headline: data.headline,
+        intro: data.intro,
+        portraitImageUrl: data.portraitImageUrl || "",
+        primaryCta: data.primaryCta,
+        secondaryCta: data.secondaryCta,
+        snapshots: data.snapshots,
       },
-      secondaryCta: {
-        label: field(formData, "secondaryCtaLabel"),
-        href: field(formData, "secondaryCtaHref"),
+    });
+
+    revalidateLanding();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update hero section" };
+  }
+}
+
+export async function updateLandingWorks(values: TLandingSelectedWorksSchema) {
+  await requireAdminSession();
+
+  const validated = LandingSelectedWorksSchema.safeParse(values);
+  if (!validated.success) return { error: "Invalid fields" };
+
+  const content = await landingRepository.get();
+  const data = validated.data;
+
+  try {
+    await landingRepository.update({
+      key: "landing",
+      selectedWorks: {
+        ...content.selectedWorks,
+        eyebrow: data.eyebrow,
+        title: data.title,
+        linkLabel: data.linkLabel,
+        linkHref: data.linkHref,
       },
-      snapshots: cleanLines(formData.get("snapshots")).map((line) => {
-        const [label, ...rest] = line.split(":");
-        return {
-          label: label?.trim() || "Note",
-          value: rest.join(":").trim() || line,
-        };
-      }),
-    },
-  });
+    });
 
-  revalidateLanding();
+    revalidateLanding();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update selected works" };
+  }
 }
 
-export async function updateLandingWorks(formData: FormData) {
+export async function updateLandingNotes(values: TLandingSelectedNotesSchema) {
+  await requireAdminSession();
+
+  const validated = LandingSelectedNotesSchema.safeParse(values);
+  if (!validated.success) return { error: "Invalid fields" };
+
   const content = await landingRepository.get();
+  const data = validated.data;
 
-  await landingRepository.update({
-    key: "landing",
-    selectedWorks: {
-      ...content.selectedWorks,
-      eyebrow: field(formData, "eyebrow"),
-      title: field(formData, "title"),
-      linkLabel: field(formData, "linkLabel"),
-      linkHref: field(formData, "linkHref"),
-      featuredIndexes: cleanLines(formData.get("featuredIndexes")),
-    },
-  });
+  try {
+    await landingRepository.update({
+      key: "landing",
+      selectedNotes: {
+        ...content.selectedNotes,
+        eyebrow: data.eyebrow,
+        title: data.title,
+        linkLabel: data.linkLabel,
+        linkHref: data.linkHref,
+      },
+    });
 
-  revalidateLanding();
+    revalidateLanding();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update selected notes" };
+  }
 }
 
-export async function updateLandingNotes(formData: FormData) {
+export async function updateLandingAside(values: TLandingAsideSchema) {
+  await requireAdminSession();
+
+  const validated = LandingAsideSchema.safeParse(values);
+  if (!validated.success) return { error: "Invalid fields" };
+
   const content = await landingRepository.get();
+  const data = validated.data;
 
-  await landingRepository.update({
-    key: "landing",
-    selectedNotes: {
-      ...content.selectedNotes,
-      eyebrow: field(formData, "eyebrow"),
-      title: field(formData, "title"),
-      linkLabel: field(formData, "linkLabel"),
-      linkHref: field(formData, "linkHref"),
-      featuredSlugs: cleanLines(formData.get("featuredSlugs")),
-    },
-  });
+  try {
+    await landingRepository.update({
+      key: "landing",
+      aside: {
+        ...content.aside,
+        studyTitle: data.studyTitle,
+        studyDescription: data.studyDescription,
+        studyItems: data.studyItems,
+        toolboxTitle: data.toolboxTitle,
+        toolboxDescription: data.toolboxDescription,
+        skillGroups: data.skillGroups,
+      },
+    });
 
-  revalidateLanding();
-}
-
-export async function updateLandingAside(formData: FormData) {
-  const content = await landingRepository.get();
-  const skillGroups: LandingSkillGroup[] = [
-    {
-      title: field(formData, "skillGroupOneTitle"),
-      skills: cleanLines(formData.get("skillGroupOneSkills")),
-    },
-    {
-      title: field(formData, "skillGroupTwoTitle"),
-      skills: cleanLines(formData.get("skillGroupTwoSkills")),
-    },
-    {
-      title: field(formData, "skillGroupThreeTitle"),
-      skills: cleanLines(formData.get("skillGroupThreeSkills")),
-    },
-    {
-      title: field(formData, "skillGroupFourTitle"),
-      skills: cleanLines(formData.get("skillGroupFourSkills")),
-    },
-  ].filter((group) => group.title || group.skills.length);
-
-  await landingRepository.update({
-    key: "landing",
-    aside: {
-      ...content.aside,
-      studyTitle: field(formData, "studyTitle"),
-      studyDescription: field(formData, "studyDescription"),
-      studyItems: cleanLines(formData.get("studyItems")),
-      toolboxTitle: field(formData, "toolboxTitle"),
-      skillGroups,
-    },
-  });
-
-  revalidateLanding();
+    revalidateLanding();
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update aside" };
+  }
 }

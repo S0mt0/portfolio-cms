@@ -3,8 +3,8 @@ import { Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { DashboardPageHeader } from "../_components/dashboard-page-header";
-import { FieldPreview } from "../_components/field-preview";
-import { ModuleCard } from "../_components/module-card";
+import { FieldPreview } from "../../../components/common/field-preview";
+import { ModuleCard } from "../../../components/common/module-card";
 
 export default function ProfilePage() {
   return (
@@ -35,9 +35,12 @@ export default function ProfilePage() {
         </ModuleCard>
         <ModuleCard className="bg-honey/35">
           <p className="font-script text-3xl text-tomato">Editor note</p>
-          <p className="mt-4 text-lg font-black">Keep it warm, short, and useful.</p>
+          <p className="mt-4 text-lg font-black">
+            Keep it warm, short, and useful.
+          </p>
           <p className="mt-3 text-sm leading-6 text-ink/65">
-            This page should control the copy that makes the portfolio feel personal without becoming a long bio.
+            This page should control the copy that makes the portfolio feel
+            personal without becoming a long bio.
           </p>
         </ModuleCard>
       </div>

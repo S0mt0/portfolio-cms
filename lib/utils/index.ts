@@ -22,3 +22,10 @@ export const getReadTime = (content: string) => {
   const readTime = Math.ceil(wordCount / wordsPerMinute);
   return `${readTime} min read`;
 };
+
+export const extractErrorMessage = (err: unknown) => {
+  if (err instanceof Error) {
+    if (err.message) return err.message;
+    else return JSON.stringify(err) || "An error occurred";
+  } else return JSON.stringify(err) || "Unknown error occurred";
+};

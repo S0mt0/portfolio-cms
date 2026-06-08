@@ -7,7 +7,7 @@ import {
   FolderKanban,
   Gamepad2,
   Home,
-  Image,
+  ImageIcon,
   Layers3,
   LogOut,
   Mail,
@@ -25,15 +25,16 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { authClient } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const navItems = [
-  { label: "Home", href: "/", icon: Home },
+  { label: "Dashboard", href: "/", icon: Home },
   {
     label: "Landing",
     href: "/landing",
     icon: Layers3,
     children: [
-      { label: "Hero", href: "/landing/hero", icon: Image },
+      { label: "Hero", href: "/landing/hero", icon: ImageIcon },
       { label: "Works", href: "/landing/works", icon: FolderKanban },
       { label: "Notes", href: "/landing/notes", icon: NotebookText },
       { label: "Aside", href: "/landing/aside", icon: PanelRight },
@@ -68,8 +69,14 @@ export function DashboardShell({
     <>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-2xl border border-ink/15 bg-honey font-black">
-            S
+          <div className="flex size-11 items-center justify-center rounded-2xl border border-ink/15 bg-honey font-black overflow-hidden">
+            {/* S */}
+            <Image
+              alt="Logo avatar"
+              src={"/avatar.png"}
+              height={200}
+              width={200}
+            />
           </div>
           <div>
             <p className="font-script text-2xl leading-none">Somto</p>
@@ -85,7 +92,9 @@ export function DashboardShell({
         {navItems.map((item) => {
           const Icon = item.icon;
           const active =
-            item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            item.href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(item.href);
           const children = "children" in item ? item.children ?? [] : [];
 
           return (
@@ -143,7 +152,7 @@ export function DashboardShell({
   return (
     <main className="min-h-dvh bg-paper text-ink">
       <div className="notebook-grid min-h-dvh">
-        <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col py-4 pl-12 pr-4 sm:px-5 lg:flex-row lg:gap-8 lg:px-8">
+        <div className="mx-auto flex min-h-dvh w-full max-w-7xl flex-col py-4 pl-8 sm:pl-14 pr-4 sm:px-5 lg:flex-row lg:gap-8 lg:px-8">
           <header className="mb-4 flex items-center justify-between rounded-2xl border border-ink/15 bg-paper/90 p-3 lg:hidden">
             <div>
               <p className="font-script text-2xl leading-none">Somto</p>

@@ -1,7 +1,7 @@
-import { defaultLandingContent } from "@/lib/content/landing-defaults";
-import type { LandingContent } from "@/lib/types/content";
+import { defaultLandingContent } from "./defaults";
+import type { LandingContent } from "@/lib/types/landing";
 
-import { createRepository } from "./base.repository";
+import { createRepository } from "../base.repository";
 
 const repository = createRepository<LandingContent>("landingContent");
 
@@ -14,7 +14,9 @@ export const landingRepository = {
     return repository.create(defaultLandingContent);
   },
 
-  async update(data: Partial<Omit<LandingContent, "_id" | "createdAt" | "updatedAt">>) {
+  async update(
+    data: Partial<Omit<LandingContent, "_id" | "createdAt" | "updatedAt">>
+  ) {
     const existing = await this.get();
     return repository.updateOne({ _id: existing._id }, data);
   },

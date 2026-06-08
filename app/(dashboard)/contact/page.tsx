@@ -3,9 +3,16 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { DashboardPageHeader } from "../_components/dashboard-page-header";
-import { ModuleCard } from "../_components/module-card";
+import { ModuleCard } from "../../../components/common/module-card";
 
-const channels = ["Email", "GitHub", "X / Twitter", "LinkedIn", "YouTube", "TikTok"];
+const channels = [
+  "Email",
+  "GitHub",
+  "X / Twitter",
+  "LinkedIn",
+  "YouTube",
+  "TikTok",
+];
 
 export default function ContactPage() {
   return (
@@ -26,7 +33,8 @@ export default function ContactPage() {
           <ModuleCard key={channel}>
             <p className="font-script text-3xl text-tomato">{channel}</p>
             <p className="mt-6 text-sm leading-6 text-ink/65">
-              Add the public URL, visibility, label, and short helper copy for this contact channel.
+              Add the public URL, visibility, label, and short helper copy for
+              this contact channel.
             </p>
           </ModuleCard>
         ))}

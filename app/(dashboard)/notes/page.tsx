@@ -3,7 +3,7 @@ import { Plus, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { DashboardPageHeader } from "../_components/dashboard-page-header";
-import { ModuleCard } from "../_components/module-card";
+import { ModuleCard } from "../../../components/common/module-card";
 import { TiptapNoteEditor } from "./_components/tiptap-note-editor";
 
 export default function NotesPage() {

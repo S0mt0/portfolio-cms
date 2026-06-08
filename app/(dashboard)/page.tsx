@@ -3,21 +3,22 @@ import {
   BookOpen,
   FolderKanban,
   Layers3,
-  MessageSquareText,
-  Sparkles,
+  Computer,
+  Quote,
 } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { landingRepository } from "@/lib/db/repositories/landing.repository";
+import { landingRepository } from "@/lib/db/repositories/landing/landing.repository";
 
-import { ModuleCard } from "./_components/module-card";
+import { ModuleCard } from "../../components/common/module-card";
 
 const quickLinks = [
   {
     title: "Landing page",
     href: "/landing",
-    description: "Hero, featured works, featured notes, current study, toolbox.",
+    description:
+      "Hero, featured works, featured notes, current study, toolbox.",
     icon: Layers3,
     color: "bg-honey/45",
   },
@@ -25,7 +26,7 @@ const quickLinks = [
     title: "Profile",
     href: "/profile",
     description: "Identity, personal copy, CV link, and public positioning.",
-    icon: Sparkles,
+    icon: Computer,
     color: "bg-blush/40",
   },
   {
@@ -52,8 +53,8 @@ export default async function DashboardHomePage() {
       <section className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="font-script text-3xl text-tomato">CMS desk</p>
-          <h1 className="mt-2 max-w-4xl text-5xl font-black tracking-tight text-ink sm:text-6xl">
-            Keep the portfolio clear, current, and human.
+          <h1 className="mt-2 max-w-4xl text-4xl sm:text-5xl font-black tracking-tight text-ink">
+            Keep the portfolio current and simple.
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-8 text-ink/65">
             This dashboard is organized by the same sections people see on the
@@ -63,7 +64,7 @@ export default async function DashboardHomePage() {
         </div>
 
         <ModuleCard className="bg-paper/70">
-          <MessageSquareText className="size-6 text-tomato" />
+          <Quote className="size-6 text-tomato" />
           <p className="mt-8 font-mono text-xs font-black uppercase tracking-[0.18em] text-ink/45">
             current landing headline
           </p>
