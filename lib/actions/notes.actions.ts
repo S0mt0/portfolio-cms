@@ -11,7 +11,7 @@ import {
   type TNoteSchema,
   type TNotesHeroSchema,
 } from "@/lib/schemas/note.schema";
-import { generateSlug, getReadTime } from "@/lib/utils";
+import { generateSlug, getReadTime, parseValidationError } from "@/lib/utils";
 
 function revalidateNotes() {
   revalidatePath("/notes");
@@ -25,13 +25,8 @@ export async function updateNotesHero(values: TNotesHeroSchema) {
   await requireAdminSession();
 
   const validated = NotesHeroSchema.safeParse(values);
-  if (!validated.success) {
-    const error = validated.error.issues
-      .map((issue) => issue.message)
-      .join(", ");
-
-    return { error };
-  }
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     await notesPageRepository.updateHero(validated.data);
@@ -47,13 +42,8 @@ export async function createNote(values: TNoteSchema) {
 
   const validated = NoteSchema.safeParse(values);
 
-  if (!validated.success) {
-    const error = validated.error.issues
-      .map((issue) => issue.message)
-      .join(", ");
-
-    return { error };
-  }
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   const data = validated.data;
   const slug = generateSlug(data.title);
@@ -82,13 +72,8 @@ export async function updateNote(id: string, values: TNoteSchema) {
   await requireAdminSession();
 
   const validated = NoteSchema.safeParse(values);
-  if (!validated.success) {
-    const error = validated.error.issues
-      .map((issue) => issue.message)
-      .join(", ");
-
-    return { error };
-  }
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   const data = validated.data;
   const slug = generateSlug(data.title);

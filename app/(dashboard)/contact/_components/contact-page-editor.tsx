@@ -26,9 +26,9 @@ export function ContactPageEditor({ content }: ContactPageEditorProps) {
       updateContactPage(formData)
         .then((res) => {
           if (res && "error" in res) toast.error(res.error);
-          else toast.success("Contact page updated");
+          else toast.success("Contact updated");
         })
-        .catch(() => toast.error("Could not update contact page."));
+        .catch(() => toast.error("Update error."));
     });
   };
 
@@ -41,6 +41,9 @@ export function ContactPageEditor({ content }: ContactPageEditorProps) {
           isDirty={isDirty}
           isPending={isPending}
           onSubmit={onSubmit}
+          onCancel={() => {
+            setFormData((prev) => ({ ...prev, cvUrl: content.cvUrl }));
+          }}
         />
         <ContactSocialsSection {...editorState} />
       </div>

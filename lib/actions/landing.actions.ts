@@ -13,6 +13,7 @@ import {
   TLandingSelectedWorksSchema,
 } from "../schemas/landing.schema";
 import { requireAdminSession } from "../auth/guards";
+import { parseValidationError } from "../utils";
 
 function revalidateLanding() {
   revalidatePath("/");
@@ -28,7 +29,8 @@ export async function updateLandingHero(values: THeroSectionSchema) {
   await requireAdminSession();
 
   const validated = HeroSectionSchema.safeParse(values);
-  if (!validated.success) return { error: "Invalid fields" };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   const data = validated.data;
 
@@ -61,7 +63,8 @@ export async function updateLandingWorks(values: TLandingSelectedWorksSchema) {
   await requireAdminSession();
 
   const validated = LandingSelectedWorksSchema.safeParse(values);
-  if (!validated.success) return { error: "Invalid fields" };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   const content = await landingRepository.get();
   const data = validated.data;
@@ -89,7 +92,8 @@ export async function updateLandingNotes(values: TLandingSelectedNotesSchema) {
   await requireAdminSession();
 
   const validated = LandingSelectedNotesSchema.safeParse(values);
-  if (!validated.success) return { error: "Invalid fields" };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   const content = await landingRepository.get();
   const data = validated.data;
@@ -117,7 +121,8 @@ export async function updateLandingAside(values: TLandingAsideSchema) {
   await requireAdminSession();
 
   const validated = LandingAsideSchema.safeParse(values);
-  if (!validated.success) return { error: "Invalid fields" };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   const content = await landingRepository.get();
   const data = validated.data;

@@ -13,10 +13,7 @@ import {
   type TExperienceHeroSchema,
   type TExperienceItemSchema,
 } from "@/lib/schemas/experience.schema";
-
-function parseError(issues: { message: string }[]) {
-  return issues.map((issue) => issue.message).join(", ");
-}
+import { parseValidationError } from "../utils";
 
 function revalidateExperience() {
   revalidatePath("/experience");
@@ -29,7 +26,8 @@ export async function updateExperienceHero(values: TExperienceHeroSchema) {
   await requireAdminSession();
 
   const validated = ExperienceHeroSchema.safeParse(values);
-  if (!validated.success) return { error: parseError(validated.error.issues) };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     await experiencePageRepository.updateHero(validated.data);
@@ -44,7 +42,8 @@ export async function createExperience(values: TExperienceItemSchema) {
   await requireAdminSession();
 
   const validated = ExperienceItemSchema.safeParse(values);
-  if (!validated.success) return { error: parseError(validated.error.issues) };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     const order = await experienceRepository.getNextOrder();
@@ -63,7 +62,8 @@ export async function updateExperience(
   await requireAdminSession();
 
   const validated = ExperienceItemSchema.safeParse(values);
-  if (!validated.success) return { error: parseError(validated.error.issues) };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     await experienceRepository.updateById(id, validated.data);

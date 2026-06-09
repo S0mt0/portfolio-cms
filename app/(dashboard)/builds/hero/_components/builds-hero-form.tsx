@@ -1,17 +1,16 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
+  CancelButton,
   SaveButton,
   TextareaField,
   TextField,
 } from "@/components/common/form-controls";
 import { ModuleCard } from "@/components/common/module-card";
-import { Button } from "@/components/ui/button";
 import { updateBuildsHero } from "@/lib/actions/builds.actions";
 import type { TBuildsHeroSchema } from "@/lib/schemas/build.schema";
 
@@ -58,23 +57,11 @@ export function BuildsHeroForm(props: TBuildsHeroSchema) {
       />
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        {isDirty ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            className="w-full flex-1"
-            onClick={() => setFormData(props)}
-          >
-            <RotateCcw />
-            Cancel
-          </Button>
-        ) : null}
+        {isDirty ? <CancelButton onCancel={() => setFormData(props)} /> : null}
         <SaveButton
           isPending={isPending}
           disabled={!isDirty}
           className="flex-1"
-          label="Save hero"
           onSubmit={onSubmit}
         />
       </div>

@@ -1,11 +1,13 @@
 "use client";
 
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 import {
+  CancelButton,
   ImagePicker,
   PublishSwitch,
   SaveButton,
@@ -20,7 +22,6 @@ import type { TNoteSchema } from "@/lib/schemas/note.schema";
 import { handleImageUpload } from "@/lib/services/upload.service";
 
 import { TagsInput } from "./note-tags";
-import Link from "next/link";
 
 export type NoteFormData = TNoteSchema & {
   id?: string;
@@ -178,18 +179,7 @@ export function NoteForm({ mode, initialData }: NoteFormProps) {
             label={mode === "edit" ? "Save note" : "Create note"}
             onSubmit={onSubmit}
           />
-          {isDirty ? (
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={onCancel}
-            >
-              <RotateCcw />
-              Cancel
-            </Button>
-          ) : null}
+          {isDirty ? <CancelButton onCancel={onCancel} /> : null}
         </ModuleCard>
 
         <ModuleCard className="space-y-4">

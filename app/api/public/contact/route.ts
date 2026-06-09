@@ -71,8 +71,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { name, email, workType, timeline, budget, details } =
-      validated.data;
+    const { name, email, workType, timeline, budget, details } = validated.data;
     const contactPage = await contactPageRepository.get();
     const recipient =
       contactPage.recipientEmail ||
@@ -104,7 +103,7 @@ export async function POST(request: Request) {
 
     await mailService.sendMail({
       to: recipient,
-      subject: `New portfolio request from ${name}`,
+      subject: `New portfolio message from ${name}`,
       text: plainText,
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #111827;">
@@ -123,7 +122,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: "Message sent. I will read it soon.",
+        message:
+          "Message recieved. I will get back to you as soon as possible.",
       },
       { headers: corsHeaders, status: 200 }
     );

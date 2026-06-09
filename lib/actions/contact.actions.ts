@@ -8,16 +8,14 @@ import {
   ContactPageSchema,
   type TContactPageSchema,
 } from "@/lib/schemas/contact.schema";
+import { parseValidationError } from "../utils";
 
 export async function updateContactPage(values: TContactPageSchema) {
   await requireAdminSession();
 
   const validated = ContactPageSchema.safeParse(values);
-  if (!validated.success) {
-    return {
-      error: validated.error.issues.map((issue) => issue.message).join(", "),
-    };
-  }
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     await contactPageRepository.update({

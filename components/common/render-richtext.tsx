@@ -42,17 +42,17 @@ export function RichTextContentRenderer({
 
   if (content.trim().startsWith("{")) {
     let textContent: string | null = null;
-    let parseError = false;
+    let parseValidationError = false;
 
     try {
       textContent = extractTextFromSerializedContent(JSON.parse(content));
     } catch {
-      parseError = true;
+      parseValidationError = true;
     }
 
     return (
       <div className={cn("min-w-full w-full max-w-full", className)}>
-        {parseError ? content : textContent || content}
+        {parseValidationError ? content : textContent || content}
       </div>
     );
   }

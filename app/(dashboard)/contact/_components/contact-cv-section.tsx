@@ -4,11 +4,12 @@ import { useRef, type ChangeEvent } from "react";
 import { Download, FileText, Upload } from "lucide-react";
 import { toast } from "sonner";
 
-import { SaveButton } from "@/components/common/form-controls";
+import { CancelButton, SaveButton } from "@/components/common/form-controls";
 import { ModuleCard } from "@/components/common/module-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { handleUploadDocument } from "@/lib/services/upload.service";
+import { handleUploadDocument } from "@/lib/services";
+import { getDocumentTitle } from "@/lib/utils";
 
 import type { ContactEditorState } from "./contact-editor.types";
 
@@ -16,26 +17,7 @@ type ContactCvSectionProps = ContactEditorState & {
   isDirty: boolean;
   isPending: boolean;
   onSubmit: () => void;
-};
-
-const getDocumentTitle = (value?: string) => {
-  if (!value) return "No CV uploaded yet";
-
-  try {
-    const pathname = value.startsWith("http")
-      ? new URL(value).pathname
-      : value;
-    const name = pathname.split("/").filter(Boolean).at(-1);
-    if (!name) return "RESUME";
-
-    return decodeURIComponent(name)
-      .replace(/\.[a-z0-9]+$/i, "")
-      .replace(/[-_]+/g, " ")
-      .trim()
-      .toUpperCase();
-  } catch {
-    return "RESUME";
-  }
+  onCancel: () => void;
 };
 
 export function ContactCvSection({
@@ -44,13 +26,13 @@ export function ContactCvSection({
   isDirty,
   isPending,
   onSubmit,
+  onCancel,
 }: ContactCvSectionProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const documentTitle = getDocumentTitle(formData.cvUrl);
 
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     handleUploadDocument(event, {
-      folder: "documents",
       onComplete: (cvUrl) => {
         setFormData((prev) => ({ ...prev, cvUrl }));
         toast.success("CV uploaded");
@@ -78,7 +60,7 @@ export function ContactCvSection({
             href={formData.cvUrl || "#"}
             target="_blank"
             rel="noreferrer"
-            className="truncate text-sm font-bold"
+            className="text-sm font-bold max-w-full wrap-break-word"
           >
             {documentTitle}
           </a>
@@ -102,7 +84,7 @@ export function ContactCvSection({
           <Upload />
           {formData.cvUrl ? "Change CV" : "Upload CV"}
         </Button>
-        {formData.cvUrl ? (
+        {formData.cvUrl && !isDirty ? (
           <Button asChild type="button" variant="outline" className="w-full">
             <a href={formData.cvUrl} download>
               <Download />
@@ -111,11 +93,10 @@ export function ContactCvSection({
           </Button>
         ) : null}
         {isDirty ? (
-          <SaveButton
-            isPending={isPending}
-            label="Save changes"
-            onSubmit={onSubmit}
-          />
+          <div className="grid gap-2">
+            <SaveButton isPending={isPending} onSubmit={onSubmit} />
+            <CancelButton onCancel={onCancel} />
+          </div>
         ) : null}
       </div>
     </ModuleCard>

@@ -18,7 +18,7 @@ export const auth = betterAuth({
     user: {
       create: {
         async before(user) {
-          if (!isAllowedAdminEmail(user.email)) {
+          if (!(await isAllowedAdminEmail(user.email))) {
             throw new Error(
               "This CMS is private. Use an allowlisted admin email or GitHub account."
             );
@@ -141,7 +141,7 @@ export const auth = betterAuth({
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, url }) => {
-        if (!isAllowedAdminEmail(email)) {
+        if (!(await isAllowedAdminEmail(email))) {
           throw new Error("This CMS is private. Use an allowlisted email.");
         }
 

@@ -13,6 +13,6 @@ export const emptyBuildForm: TBuildItemSchema = {
   githubUrl: "",
   liveUrl: "",
   stack: [],
-  published: true,
+  published: false,
   featured: false,
 };

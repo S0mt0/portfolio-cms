@@ -6,7 +6,7 @@ import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
 export async function requireAdminSession() {
   const session = await getCurrentSession();
 
-  if (!session?.user || !isAllowedAdminEmail(session.user.email)) {
+  if (!session?.user || !(await isAllowedAdminEmail(session.user.email))) {
     redirect("/auth/login");
   }
 

@@ -24,12 +24,34 @@ export const getReadTime = (content: string) => {
   return `${readTime} min read`;
 };
 
+export const getDocumentTitle = (value?: string) => {
+  if (!value) return "No CV uploaded yet";
+
+  try {
+    const pathname = value.startsWith("http") ? new URL(value).pathname : value;
+    const name = pathname.split("/").filter(Boolean).at(-1);
+    if (!name) return "RESUME";
+
+    return decodeURIComponent(name)
+      .replace(/\.[a-z0-9]+$/i, "")
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .toUpperCase();
+  } catch {
+    return "RESUME";
+  }
+};
+
 export const extractErrorMessage = (err: unknown) => {
   if (err instanceof Error) {
     if (err.message) return err.message;
     else return JSON.stringify(err) || "An error occurred";
   } else return JSON.stringify(err) || "Unknown error occurred";
 };
+
+export function parseValidationError(issues: { message: string }[]) {
+  return issues.map((issue) => issue.message).join(", ");
+}
 
 export function formatDate(date: Date | string) {
   return format(new Date(date), "dd MMMM, yyyy");

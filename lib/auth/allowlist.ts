@@ -1,12 +1,5 @@
-const splitList = (value?: string) =>
-  value
-    ?.split(",")
-    .map((item) => item.trim().toLowerCase())
-    .filter(Boolean) ?? [];
+import { adminAllowlistRepository } from "@/lib/db/repositories/admin-allowlist.repository";
 
-export const adminEmails = splitList(process.env.DEFAULT_ADMIN_EMAILS ?? "");
-
-export function isAllowedAdminEmail(email?: string | null) {
-  if (!email) return false;
-  return adminEmails.includes(email.trim().toLowerCase());
+export async function isAllowedAdminEmail(email?: string | null) {
+  return adminAllowlistRepository.isAllowed(email);
 }

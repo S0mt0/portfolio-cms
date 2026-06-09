@@ -11,5 +11,5 @@ export const emptyExperienceForm: TExperienceItemSchema = {
   websiteUrl: "",
   summary: "",
   signals: [],
-  published: true,
+  published: false,
 };

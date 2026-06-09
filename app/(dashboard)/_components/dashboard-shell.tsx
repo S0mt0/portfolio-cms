@@ -16,6 +16,7 @@ import {
   Menu,
   NotebookText,
   PanelRight,
+  Settings,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -66,7 +67,11 @@ const navItems: NavItem[] = [
     children: [
       { label: "Hero", href: "/experience/hero", icon: LayoutTemplate },
       { kind: "separator", label: "Manage timeline" },
-      { label: "Timeline", href: "/experience/manage", icon: BriefcaseBusiness },
+      {
+        label: "Timeline",
+        href: "/experience/manage",
+        icon: BriefcaseBusiness,
+      },
     ],
   },
   {
@@ -91,6 +96,7 @@ const navItems: NavItem[] = [
   },
   { label: "Contact", href: "/contact", icon: Mail },
   { label: "Extra", href: "/extra", icon: Gamepad2 },
+  { label: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function DashboardShell({

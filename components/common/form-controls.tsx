@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState, type ChangeEvent, type RefObject } from "react";
-import { ImagePlus, Save, Upload } from "lucide-react";
+import { ImagePlus, RotateCcw, Save, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -217,7 +217,7 @@ export function SaveButton({
   return (
     <Button
       type="button"
-      className={cn("w-full", className)}
+      className={cn("w-full h-10! shrink-0", className)}
       size="lg"
       onClick={onSubmit}
       disabled={isPending || disabled}
@@ -228,8 +228,31 @@ export function SaveButton({
   );
 }
 
+export function CancelButton({
+  onCancel,
+  className,
+  label = "Cancel",
+}: {
+  onCancel: () => void;
+  label?: string;
+  className?: string;
+}) {
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="lg"
+      className={cn("w-full flex-1 h-9!", className)}
+      onClick={onCancel}
+    >
+      <RotateCcw />
+      {label}
+    </Button>
+  );
+}
+
 export function PublishSwitch({
-  checked,
+  checked = false,
   onChange,
   hint,
   checkedLabel,

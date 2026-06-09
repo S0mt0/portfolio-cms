@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono, Caveat } from "next/font/google";
 import { Toaster } from "sonner";
 
@@ -27,6 +27,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Somto CMS",
   description: "Private CMS for Somto's portfolio.",
+};
+
+export const viewport: Viewport = {
+  userScalable: false,
+  maximumScale: 1.0,
+  initialScale: 1,
 };
 
 export default function RootLayout({

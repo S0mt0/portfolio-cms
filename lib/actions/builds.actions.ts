@@ -13,10 +13,7 @@ import {
   type TBuildItemSchema,
   type TBuildsHeroSchema,
 } from "@/lib/schemas/build.schema";
-
-function parseError(issues: { message: string }[]) {
-  return issues.map((issue) => issue.message).join(", ");
-}
+import { parseValidationError } from "../utils";
 
 function revalidateBuilds() {
   revalidatePath("/builds");
@@ -31,7 +28,8 @@ export async function updateBuildsHero(values: TBuildsHeroSchema) {
   await requireAdminSession();
 
   const validated = BuildsHeroSchema.safeParse(values);
-  if (!validated.success) return { error: parseError(validated.error.issues) };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     await buildsPageRepository.updateHero(validated.data);
@@ -46,7 +44,8 @@ export async function createBuild(values: TBuildItemSchema) {
   await requireAdminSession();
 
   const validated = BuildItemSchema.safeParse(values);
-  if (!validated.success) return { error: parseError(validated.error.issues) };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     const order = await buildRepository.getNextOrder();
@@ -62,7 +61,8 @@ export async function updateBuild(id: string, values: TBuildItemSchema) {
   await requireAdminSession();
 
   const validated = BuildItemSchema.safeParse(values);
-  if (!validated.success) return { error: parseError(validated.error.issues) };
+  if (!validated.success)
+    return { error: parseValidationError(validated.error.issues) };
 
   try {
     await buildRepository.updateById(id, validated.data);

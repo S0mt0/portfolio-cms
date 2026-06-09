@@ -2,18 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 
 import { TagsInput } from "@/app/(dashboard)/notes/manage/_components/note-tags";
 import {
+  CancelButton,
   PublishSwitch,
   SaveButton,
   TextareaField,
   TextField,
 } from "@/components/common/form-controls";
 import { ModuleCard } from "@/components/common/module-card";
-import { Button } from "@/components/ui/button";
 import { createBuild, updateBuild } from "@/lib/actions/builds.actions";
 import type { TBuildItemSchema } from "@/lib/schemas/build.schema";
 
@@ -141,19 +140,9 @@ export function BuildForm({ item, onCancel }: BuildFormProps) {
 
       <div className="flex flex-col gap-3">
         {isDirty ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            onClick={() => {
-              setFormData(initial);
-              onCancel();
-            }}
-          >
-            <RotateCcw />
-            Cancel
-          </Button>
+          <CancelButton onCancel={() => setFormData(initial)} />
         ) : null}
+
         <SaveButton
           isPending={isPending}
           disabled={!isDirty}
