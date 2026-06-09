@@ -18,7 +18,11 @@ import {
 
 import { SocialButtons } from "./social-buttons";
 
-export function MagicLinkForm() {
+type MagicLinkFormProps = {
+  accessRequestEmail: string;
+};
+
+export function MagicLinkForm({ accessRequestEmail }: MagicLinkFormProps) {
   const searchParams = useSearchParams();
   const callbackURL = getSafeCallbackUrl(searchParams.get("callbackUrl"));
   const [message, setMessage] = useState<{
@@ -56,6 +60,17 @@ export function MagicLinkForm() {
     });
   }
 
+  const subject = "CMS Access Request";
+
+  const body = `Hello dear,
+  
+  Please, kindly grant me access to your CMS studio.`;
+
+  const href = `mailto:${accessRequestEmail}?${new URLSearchParams({
+    subject,
+    body,
+  }).toString()}`;
+
   return (
     <div className="space-y-5">
       <SocialButtons />
@@ -89,7 +104,10 @@ export function MagicLinkForm() {
       </form>
       <p className="text-center text-sm leading-6 text-ink/60">
         No password to remember. If the email is allowlisted, the CMS sends a
-        one-time link.
+        one-time link.{" "}
+        <a href={href} className="underline">
+          Request access?
+        </a>
       </p>
     </div>
   );
