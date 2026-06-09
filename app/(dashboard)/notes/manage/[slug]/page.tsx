@@ -10,6 +10,7 @@ import { noteRepository } from "@/lib/db/repositories/notes";
 
 import { DashboardPageHeader } from "../../../_components/dashboard-page-header";
 import { formatDate } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 export default async function NoteDetailPage({
   params,
@@ -89,9 +90,11 @@ export default async function NoteDetailPage({
             </p>
           ) : null}
 
+          <Separator className="my-3" orientation="horizontal" />
+
           <RichTextContentRenderer
             content={note.content}
-            className="notes-editor max-w-none"
+            className="notes-editor max-w-none mt-1.5"
           />
         </div>
       </article>

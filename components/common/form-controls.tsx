@@ -217,7 +217,7 @@ export function SaveButton({
   return (
     <Button
       type="button"
-      className={cn("w-full h-10! shrink-0", className)}
+      className={cn("w-full h-9! shrink-0", className)}
       size="lg"
       onClick={onSubmit}
       disabled={isPending || disabled}
@@ -242,7 +242,7 @@ export function CancelButton({
       type="button"
       variant="outline"
       size="lg"
-      className={cn("w-full flex-1 h-9!", className)}
+      className={cn("w-full h-9! shrink-0", className)}
       onClick={onCancel}
     >
       <RotateCcw />

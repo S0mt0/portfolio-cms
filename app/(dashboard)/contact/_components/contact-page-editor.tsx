@@ -16,14 +16,22 @@ type ContactPageEditorProps = {
 };
 
 export function ContactPageEditor({ content }: ContactPageEditorProps) {
-  const [formData, setFormData] = useState<TContactPageSchema>(content);
+  const [formData, setFormData] = useState<TContactPageSchema>({
+    ...content,
+    cvUrl: content.cvUrl,
+  });
   const [isPending, startTransition] = useTransition();
-  const isDirty = JSON.stringify(formData) !== JSON.stringify(content);
+  const contactFormData = { ...formData, cvUrl: content.cvUrl };
+  const isDirty =
+    JSON.stringify(contactFormData) !== JSON.stringify({
+      ...content,
+      cvUrl: content.cvUrl,
+    });
   const editorState = { formData, setFormData };
 
   const onSubmit = () => {
     startTransition(() => {
-      updateContactPage(formData)
+      updateContactPage(contactFormData)
         .then((res) => {
           if (res && "error" in res) toast.error(res.error);
           else toast.success("Contact updated");
@@ -37,13 +45,8 @@ export function ContactPageEditor({ content }: ContactPageEditorProps) {
       <ContactCopySection {...editorState} />
       <div className="space-y-5">
         <ContactCvSection
-          {...editorState}
-          isDirty={isDirty}
-          isPending={isPending}
-          onSubmit={onSubmit}
-          onCancel={() => {
-            setFormData((prev) => ({ ...prev, cvUrl: content.cvUrl }));
-          }}
+          initialCvUrl={content.cvUrl}
+          onSaved={(cvUrl) => setFormData((prev) => ({ ...prev, cvUrl }))}
         />
         <ContactSocialsSection {...editorState} />
       </div>

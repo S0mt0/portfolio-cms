@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, type ChangeEvent } from "react";
+import { useRef, useState, useTransition, type ChangeEvent } from "react";
 import { Download, FileText, Upload } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,38 +8,52 @@ import { CancelButton, SaveButton } from "@/components/common/form-controls";
 import { ModuleCard } from "@/components/common/module-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { handleUploadDocument } from "@/lib/services";
+import { updateContactCv } from "@/lib/actions/contact.actions";
+import { handleUploadDocument } from "@/lib/services/upload.service";
 import { getDocumentTitle } from "@/lib/utils";
 
-import type { ContactEditorState } from "./contact-editor.types";
-
-type ContactCvSectionProps = ContactEditorState & {
-  isDirty: boolean;
-  isPending: boolean;
-  onSubmit: () => void;
-  onCancel: () => void;
+type ContactCvSectionProps = {
+  initialCvUrl?: string;
+  onSaved: (cvUrl: string) => void;
 };
 
 export function ContactCvSection({
-  formData,
-  setFormData,
-  isDirty,
-  isPending,
-  onSubmit,
-  onCancel,
+  initialCvUrl,
+  onSaved,
 }: ContactCvSectionProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const documentTitle = getDocumentTitle(formData.cvUrl);
+  const [cvUrl, setCvUrl] = useState(initialCvUrl || "");
+  const [savedCvUrl, setSavedCvUrl] = useState(initialCvUrl || "");
+  const [isPending, startTransition] = useTransition();
+  const isDirty = cvUrl !== savedCvUrl;
+  const documentTitle = getDocumentTitle(cvUrl);
 
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     handleUploadDocument(event, {
       onComplete: (cvUrl) => {
-        setFormData((prev) => ({ ...prev, cvUrl }));
+        setCvUrl(cvUrl);
         toast.success("CV uploaded");
       },
       onError: (message) => toast.error(message),
     });
   };
+
+  const onSubmit = () => {
+    startTransition(() => {
+      updateContactCv(cvUrl)
+        .then((res) => {
+          if (res && "error" in res) toast.error(res.error);
+          else {
+            setSavedCvUrl(cvUrl);
+            onSaved(cvUrl);
+            toast.success("CV updated");
+          }
+        })
+        .catch(() => toast.error("Could not update CV."));
+    });
+  };
+
+  const onCancel = () => setCvUrl(savedCvUrl);
 
   return (
     <ModuleCard className="h-fit space-y-5 bg-honey/25">
@@ -57,7 +71,7 @@ export function ContactCvSection({
             <FileText className="size-5" />
           </span>
           <a
-            href={formData.cvUrl || "#"}
+            href={cvUrl || "#"}
             target="_blank"
             rel="noreferrer"
             className="text-sm font-bold max-w-full wrap-break-word"
@@ -82,11 +96,11 @@ export function ContactCvSection({
           onClick={() => inputRef.current?.click()}
         >
           <Upload />
-          {formData.cvUrl ? "Change CV" : "Upload CV"}
+          {cvUrl ? "Change CV" : "Upload CV"}
         </Button>
-        {formData.cvUrl && !isDirty ? (
+        {cvUrl && !isDirty ? (
           <Button asChild type="button" variant="outline" className="w-full">
-            <a href={formData.cvUrl} download>
+            <a href={cvUrl} download>
               <Download />
               Download
             </a>

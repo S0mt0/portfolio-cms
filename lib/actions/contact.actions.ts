@@ -29,3 +29,25 @@ export async function updateContactPage(values: TContactPageSchema) {
     return { error: "Could not update contact page" };
   }
 }
+
+export async function updateContactCv(cvUrl: string) {
+  await requireAdminSession();
+
+  try {
+    const existing = await contactPageRepository.get();
+
+    await contactPageRepository.update({
+      key: "contact",
+      hero: existing.hero,
+      recipientEmail: existing.recipientEmail,
+      helperNote: existing.helperNote,
+      socials: existing.socials,
+      cvUrl,
+    });
+    revalidatePath("/contact");
+    revalidatePath("/api/public/contact");
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not update CV" };
+  }
+}

@@ -133,10 +133,14 @@ export function SettingsPanel({
                 <div className="min-w-0">
                   <p className="truncate text-sm font-black">{admin.email}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    <Badge variant={admin.source === "env" ? "default" : "outline"}>
-                      {admin.source === "env" ? "Env admin" : "CMS admin"}
+                    <Badge
+                      variant={admin.source === "env" ? "default" : "outline"}
+                    >
+                      {admin.source === "env" ? "Super admin" : "CMS admin"}
                     </Badge>
-                    {isCurrentUser ? <Badge variant="secondary">You</Badge> : null}
+                    {isCurrentUser ? (
+                      <Badge variant="secondary">You</Badge>
+                    ) : null}
                   </div>
                 </div>
                 <Button
@@ -185,8 +189,8 @@ export function SettingsPanel({
           <AlertDialogHeader>
             <AlertDialogTitle>Remove admin email?</AlertDialogTitle>
             <AlertDialogDescription>
-              {pendingRemove?.email} will no longer be able to sign in unless
-              it is added again.
+              {pendingRemove?.email} will no longer be able to sign in unless it
+              is added again.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

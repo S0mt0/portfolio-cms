@@ -78,13 +78,6 @@ export function SortableBuildCard({
           ) : null}
         </div>
         <div className="flex gap-2 md:justify-end">
-          {build.liveUrl ? (
-            <Button asChild variant="outline" size="sm">
-              <a href={build.liveUrl} target="_blank" rel="noreferrer">
-                <ExternalLink />
-              </a>
-            </Button>
-          ) : null}
           <Button type="button" variant="outline" size="sm" onClick={onEdit}>
             <Pencil />
             Edit

@@ -43,7 +43,13 @@ export async function GET() {
 
               return {
                 id: buildId?.toString(),
-                ...buildContent,
+                title: buildContent.title,
+                summary: buildContent.summary,
+                category: buildContent.category,
+                proofNote: buildContent.proofNote,
+                githubUrl: buildContent.githubUrl,
+                liveUrl: buildContent.liveUrl,
+                stack: buildContent.stack,
                 createdAt: buildCreatedAt.toISOString(),
                 updatedAt: buildUpdatedAt.toISOString(),
               };

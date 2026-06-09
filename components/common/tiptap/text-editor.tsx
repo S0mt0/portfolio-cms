@@ -158,7 +158,6 @@ export function TextEditor({
       }),
       Link.configure({
         openOnClick: false,
-        // enableClickSelection: true,
         HTMLAttributes: {
           class: "cursor-pointer text-tomato underline underline-offset-4",
         },
@@ -178,15 +177,17 @@ export function TextEditor({
         nocookie: true,
         width: 720,
         height: 405,
+        HTMLAttributes: {
+          class: "rounded-none",
+        },
       }),
       ImageUploadNode.configure({
         accept: "image/*",
         limit: 1,
         maxSize: FILE_CONFIG.IMAGE.maxSize,
         upload: async (file, onProgress, abortSignal) => {
-          if (!FILE_CONFIG.IMAGE.mimeTypes.includes(file.type)) {
+          if (!FILE_CONFIG.IMAGE.mimeTypes.includes(file.type))
             throw new Error("Unsupported image type.");
-          }
 
           onProgress?.({ progress: 12 });
           const url = await handleUpload(file, "notes", abortSignal);
