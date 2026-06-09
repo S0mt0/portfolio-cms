@@ -86,6 +86,28 @@ export function BuildForm({ item, onCancel }: BuildFormProps) {
         defaultValue={formData.category}
         onChange={(category) => setFormData((prev) => ({ ...prev, category }))}
       />
+      <div className="space-y-2">
+        <label
+          htmlFor="build-status"
+          className="text-sm font-medium leading-none"
+        >
+          Status
+        </label>
+        <select
+          id="build-status"
+          value={formData.status}
+          onChange={(event) =>
+            setFormData((prev) => ({
+              ...prev,
+              status: event.target.value as TBuildItemSchema["status"],
+            }))
+          }
+          className="h-11 w-full rounded-xl border border-input bg-transparent px-3 text-sm outline-none transition-colors focus:border-ring"
+        >
+          <option value="active">Active</option>
+          <option value="in-progress">In progress</option>
+        </select>
+      </div>
       <TextareaField
         label="Summary"
         defaultValue={formData.summary}

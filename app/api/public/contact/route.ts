@@ -10,6 +10,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
 };
 
 const escapeHtml = (value: string) =>

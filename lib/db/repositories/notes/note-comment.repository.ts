@@ -16,12 +16,27 @@ export const noteCommentRepository = {
       .toArray();
   },
 
-  async likeById(id: string) {
-    await repository
-      .collection()
-      .updateOne({ _id: new ObjectId(id) }, { $inc: { likes: 1 } });
+  async toggleLike(id: string, visitorId: string) {
+    const comment = await repository.findOne({ _id: new ObjectId(id) });
+    if (!comment) return null;
 
-    return repository.findOne({ _id: new ObjectId(id) });
+    const hasLiked = (comment.likedBy || []).includes(visitorId);
+    await repository.collection().updateOne(
+      { _id: new ObjectId(id) },
+      hasLiked
+        ? {
+            $pull: { likedBy: visitorId },
+            $set: { likes: Math.max((comment.likes || 0) - 1, 0), updatedAt: new Date() },
+          }
+        : {
+            $addToSet: { likedBy: visitorId },
+            $inc: { likes: 1 },
+            $set: { updatedAt: new Date() },
+          }
+    );
+
+    const updated = await repository.findOne({ _id: new ObjectId(id) });
+    return updated ? { comment: updated, liked: !hasLiked } : null;
   },
 
   deleteByNoteSlug(noteSlug: string) {

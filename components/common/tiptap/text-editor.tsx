@@ -246,7 +246,7 @@ export function TextEditor({
   };
 
   return (
-    <div className="space-y-3">
+    <div>
       <div className="flex flex-wrap items-center gap-2 rounded-t-2xl border border-ink/15 bg-muted/30 p-2">
         <ToolbarButton
           label="Undo"

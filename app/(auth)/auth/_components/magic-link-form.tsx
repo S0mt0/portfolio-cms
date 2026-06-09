@@ -62,11 +62,9 @@ export function MagicLinkForm({ accessRequestEmail }: MagicLinkFormProps) {
 
   const subject = "CMS Access Request";
 
-  const body = `Hello dear,
-  
-  Please, kindly grant me access to your CMS studio.`;
+  const body = `Hello dear,\nPlease, kindly grant me access to your CMS studio.`;
 
-  const href = `mailto:talktosomto@gmail.com?subject=${encodeURIComponent(
+  const href = `mailto:${accessRequestEmail}?subject=${encodeURIComponent(
     subject
   )}&body=${encodeURIComponent(body)}`;
 

@@ -24,6 +24,7 @@ export const BuildsHeroSchema = z.object({
 export const BuildItemSchema = z.object({
   title: z.string().trim().min(1, { message: "Title is required" }),
   category: z.string().trim().min(1, { message: "Category is required" }),
+  status: z.enum(["active", "in-progress"]).default("active"),
   summary: optionalText,
   proofNote: optionalText,
   githubUrl: optionalText,

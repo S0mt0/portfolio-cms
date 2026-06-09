@@ -10,6 +10,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
   "Access-Control-Allow-Methods": "GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
 };
 
 export async function OPTIONS() {
@@ -46,6 +47,7 @@ export async function GET() {
                 title: buildContent.title,
                 summary: buildContent.summary,
                 category: buildContent.category,
+                status: buildContent.status || "active",
                 proofNote: buildContent.proofNote,
                 githubUrl: buildContent.githubUrl,
                 liveUrl: buildContent.liveUrl,

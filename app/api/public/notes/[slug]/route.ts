@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 import { FRONTEND_BASE_URL } from "@/lib/constants";
 import {
@@ -6,11 +7,58 @@ import {
   noteRepository,
 } from "@/lib/db/repositories/notes";
 import { extractErrorMessage } from "@/lib/utils";
+import type { NoteCommentContent } from "@/lib/types/notes";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
   "Access-Control-Allow-Methods": "GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
+};
+
+type PublicComment = {
+  id: string;
+  parentId: string | null;
+  name: string;
+  website: string;
+  content: string;
+  likes: number;
+  liked: boolean;
+  createdAt: string;
+  replies: PublicComment[];
+};
+
+const buildCommentTree = (
+  comments: NoteCommentContent[],
+  visitorId?: string
+): PublicComment[] => {
+  const byId = new Map<string, PublicComment>();
+  const roots: PublicComment[] = [];
+
+  comments.forEach((comment) => {
+    const id = comment._id?.toString() || "";
+    byId.set(id, {
+      id,
+      parentId: comment.parentId || null,
+      name: comment.name,
+      website: comment.website || "",
+      content: comment.content,
+      likes: Math.max(comment.likes || 0, 0),
+      liked: visitorId ? (comment.likedBy || []).includes(visitorId) : false,
+      createdAt: comment.createdAt.toISOString(),
+      replies: [],
+    });
+  });
+
+  byId.forEach((comment) => {
+    if (comment.parentId && byId.has(comment.parentId)) {
+      byId.get(comment.parentId)?.replies.push(comment);
+    } else {
+      roots.push(comment);
+    }
+  });
+
+  return roots;
 };
 
 export async function OPTIONS() {
@@ -23,6 +71,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
+    const visitorId = (await cookies()).get("somto_visitor")?.value;
     const note = await noteRepository.findBySlug(slug);
 
     if (!note || !note.published) {
@@ -56,14 +105,7 @@ export async function GET(
           author: note.author || { name: "Somto", image: null },
           publishedAt: note.publishedAt?.toISOString() ?? null,
           updatedAt: (note.updatedAt ?? note.createdAt).toISOString(),
-          comments: comments.map((comment) => ({
-            id: comment._id?.toString(),
-            name: comment.name,
-            website: comment.website || "",
-            content: comment.content,
-            likes: comment.likes || 0,
-            createdAt: comment.createdAt.toISOString(),
-          })),
+          comments: buildCommentTree(comments, visitorId),
           relatedPosts: relatedPosts.map((item) => ({
             id: item._id?.toString(),
             title: item.title,

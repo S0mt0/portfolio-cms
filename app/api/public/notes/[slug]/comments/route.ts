@@ -12,6 +12,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
 };
 
 export async function OPTIONS() {
@@ -59,7 +60,9 @@ export async function POST(
       ...validated.data,
       noteSlug: slug,
       noteId: note._id?.toString(),
+      parentId: validated.data.parentId || null,
       likes: 0,
+      likedBy: [],
     });
 
     return NextResponse.json(
@@ -70,6 +73,9 @@ export async function POST(
           id: comment._id?.toString(),
           name: comment.name,
           website: comment.website || "",
+          parentId: comment.parentId || null,
+          replies: [],
+          liked: false,
           content: comment.content,
           likes: comment.likes,
           createdAt: comment.createdAt.toISOString(),

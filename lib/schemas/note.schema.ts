@@ -41,6 +41,7 @@ export const NoteSchema = z.object({
 });
 
 export const NoteCommentSchema = z.object({
+  parentId: optionalText,
   name: z
     .string()
     .trim()

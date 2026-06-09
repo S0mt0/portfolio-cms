@@ -9,6 +9,7 @@ export default async function BuildsManagePage() {
     id: build._id?.toString() || "",
     title: build.title,
     category: build.category,
+    status: build.status || "active",
     summary: build.summary || "",
     proofNote: build.proofNote || "",
     githubUrl: build.githubUrl || "",

@@ -8,6 +8,7 @@ export type BuildListItem = TBuildItemSchema & {
 export const emptyBuildForm: TBuildItemSchema = {
   title: "",
   category: "",
+  status: "active",
   summary: "",
   proofNote: "",
   githubUrl: "",

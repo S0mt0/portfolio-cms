@@ -31,9 +31,11 @@ export interface NoteContent extends CmsDocumentBase {
 export interface NoteCommentContent extends CmsDocumentBase {
   noteSlug: string;
   noteId?: string;
+  parentId?: string | null;
   name: string;
   email: string;
   website?: string;
   content: string;
   likes: number;
+  likedBy: string[];
 }

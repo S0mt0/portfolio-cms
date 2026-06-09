@@ -9,6 +9,7 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
   "Access-Control-Allow-Methods": "GET, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true",
 };
 
 export async function OPTIONS() {

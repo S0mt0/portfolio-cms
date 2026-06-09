@@ -2,7 +2,7 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ExternalLink, GripVertical, Pencil, Trash2 } from "lucide-react";
+import { GripVertical, Pencil, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -54,6 +54,7 @@ export function SortableBuildCard({
             <p className="font-mono text-xs font-black uppercase tracking-[0.18em] text-ink/45">
               {build.category}
             </p>
+            <Badge variant="outline">{build.status.replace("-", " ")}</Badge>
             <Badge variant={build.published ? "default" : "outline"}>
               {build.published ? "Published" : "Draft"}
             </Badge>

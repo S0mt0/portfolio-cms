@@ -12,6 +12,7 @@ export interface BuildsPageContent extends CmsDocumentBase {
 export interface BuildItemContent extends CmsDocumentBase {
   title: string;
   category: string;
+  status: "active" | "in-progress";
   summary?: string;
   proofNote?: string;
   githubUrl?: string;
