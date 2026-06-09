@@ -32,6 +32,11 @@ const socialFields: Array<{
     hint: "Profile slug or full profile URL.",
   },
   {
+    key: "instagram",
+    label: "Instagram",
+    hint: "Handle or full profile URL.",
+  },
+  {
     key: "youtube",
     label: "YouTube",
     hint: "Channel URL or @handle.",
@@ -40,6 +45,31 @@ const socialFields: Array<{
     key: "tiktok",
     label: "TikTok",
     hint: "Profile URL or @handle.",
+  },
+  {
+    key: "medium",
+    label: "Medium",
+    hint: "Username or Medium profile URL.",
+  },
+  {
+    key: "facebook",
+    label: "Facebook",
+    hint: "Username or full profile URL.",
+  },
+  {
+    key: "threads",
+    label: "Threads",
+    hint: "Handle or full profile URL.",
+  },
+  {
+    key: "whatsapp",
+    label: "WhatsApp",
+    hint: "Phone number or wa.me link.",
+  },
+  {
+    key: "telegram",
+    label: "Telegram",
+    hint: "Username or t.me link.",
   },
   {
     key: "website",
@@ -53,7 +83,7 @@ export function ContactSocialsSection({
   setFormData,
 }: ContactEditorState) {
   return (
-    <ModuleCard className="space-y-6 xl:col-span-2">
+    <ModuleCard className="space-y-6">
       <div>
         <p className="font-script text-3xl text-tomato">Social handles</p>
         <p className="text-sm leading-6 text-ink/60">
@@ -61,7 +91,7 @@ export function ContactSocialsSection({
         </p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4">
         {socialFields.map((field) => (
           <TextField
             key={field.key}

@@ -24,6 +24,15 @@ const defaultContactPage: Omit<
     github: "0xsomto",
     x: "0xsomto",
     linkedin: "0xsomto",
+    instagram: "",
+    youtube: "",
+    tiktok: "",
+    medium: "",
+    facebook: "",
+    threads: "",
+    whatsapp: "",
+    telegram: "",
+    website: "",
   },
 };
 

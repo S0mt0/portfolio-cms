@@ -35,8 +35,15 @@ export function ContactPageEditor({ content }: ContactPageEditorProps) {
   return (
     <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_25rem]">
       <ContactCopySection {...editorState} />
-      <ContactCvSection {...editorState} />
-      <ContactSocialsSection {...editorState} />
+      <div className="space-y-5">
+        <ContactCvSection
+          {...editorState}
+          isDirty={isDirty}
+          isPending={isPending}
+          onSubmit={onSubmit}
+        />
+        <ContactSocialsSection {...editorState} />
+      </div>
       <ContactEditorActions
         isDirty={isDirty}
         isPending={isPending}

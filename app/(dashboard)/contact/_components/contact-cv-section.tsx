@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef, type ChangeEvent } from "react";
-import { FileText, Upload } from "lucide-react";
+import { Download, FileText, Upload } from "lucide-react";
 import { toast } from "sonner";
 
+import { SaveButton } from "@/components/common/form-controls";
 import { ModuleCard } from "@/components/common/module-card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -11,8 +12,41 @@ import { handleUploadDocument } from "@/lib/services/upload.service";
 
 import type { ContactEditorState } from "./contact-editor.types";
 
-export function ContactCvSection({ formData, setFormData }: ContactEditorState) {
+type ContactCvSectionProps = ContactEditorState & {
+  isDirty: boolean;
+  isPending: boolean;
+  onSubmit: () => void;
+};
+
+const getDocumentTitle = (value?: string) => {
+  if (!value) return "No CV uploaded yet";
+
+  try {
+    const pathname = value.startsWith("http")
+      ? new URL(value).pathname
+      : value;
+    const name = pathname.split("/").filter(Boolean).at(-1);
+    if (!name) return "RESUME";
+
+    return decodeURIComponent(name)
+      .replace(/\.[a-z0-9]+$/i, "")
+      .replace(/[-_]+/g, " ")
+      .trim()
+      .toUpperCase();
+  } catch {
+    return "RESUME";
+  }
+};
+
+export function ContactCvSection({
+  formData,
+  setFormData,
+  isDirty,
+  isPending,
+  onSubmit,
+}: ContactCvSectionProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const documentTitle = getDocumentTitle(formData.cvUrl);
 
   const onUpload = (event: ChangeEvent<HTMLInputElement>) => {
     handleUploadDocument(event, {
@@ -44,9 +78,9 @@ export function ContactCvSection({ formData, setFormData }: ContactEditorState) 
             href={formData.cvUrl || "#"}
             target="_blank"
             rel="noreferrer"
-            className="truncate text-sm font-bold underline underline-offset-4"
+            className="truncate text-sm font-bold"
           >
-            {formData.cvUrl || "No CV uploaded yet"}
+            {documentTitle}
           </a>
         </div>
       </div>
@@ -58,15 +92,32 @@ export function ContactCvSection({ formData, setFormData }: ContactEditorState) 
         className="hidden"
         onChange={onUpload}
       />
-      <Button
-        type="button"
-        variant="outline"
-        className="w-full"
-        onClick={() => inputRef.current?.click()}
-      >
-        <Upload />
-        {formData.cvUrl ? "Change CV" : "Upload CV"}
-      </Button>
+      <div className="grid gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          onClick={() => inputRef.current?.click()}
+        >
+          <Upload />
+          {formData.cvUrl ? "Change CV" : "Upload CV"}
+        </Button>
+        {formData.cvUrl ? (
+          <Button asChild type="button" variant="outline" className="w-full">
+            <a href={formData.cvUrl} download>
+              <Download />
+              Download
+            </a>
+          </Button>
+        ) : null}
+        {isDirty ? (
+          <SaveButton
+            isPending={isPending}
+            label="Save changes"
+            onSubmit={onSubmit}
+          />
+        ) : null}
+      </div>
     </ModuleCard>
   );
 }
