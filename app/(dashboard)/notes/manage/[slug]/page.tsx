@@ -6,7 +6,10 @@ import { ArrowLeft, Edit3 } from "lucide-react";
 import { RichTextContentRenderer } from "@/components/common/render-richtext";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { noteRepository } from "@/lib/db/repositories/notes";
+import {
+  noteCommentRepository,
+  noteRepository,
+} from "@/lib/db/repositories/notes";
 
 import { DashboardPageHeader } from "../../../_components/dashboard-page-header";
 import { formatDate } from "@/lib/utils";
@@ -18,7 +21,10 @@ export default async function NoteDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const note = await noteRepository.findBySlug(slug);
+  const [note, comments] = await Promise.all([
+    noteRepository.findBySlug(slug),
+    noteCommentRepository.findByNoteSlug(slug),
+  ]);
 
   if (!note) notFound();
 
@@ -98,6 +104,42 @@ export default async function NoteDetailPage({
           />
         </div>
       </article>
+
+      <section className="mt-6 rounded-3xl border border-ink/15 bg-paper/80 p-5 sm:p-8">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="font-script text-3xl text-tomato">Comments</p>
+            <p className="text-sm text-ink/55">
+              {comments.length
+                ? `${comments.length} visitor note${
+                    comments.length === 1 ? "" : "s"
+                  }`
+                : "No comments yet."}
+            </p>
+          </div>
+          <Badge variant={note.allowComments ? "default" : "outline"}>
+            {note.allowComments ? "Open" : "Closed"}
+          </Badge>
+        </div>
+
+        {comments.length ? (
+          <div className="mt-5 divide-y divide-ink/10">
+            {comments.map((comment) => (
+              <article key={comment._id?.toString()} className="py-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="font-bold">{comment.name}</p>
+                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-ink/45">
+                    {formatDate(comment.createdAt)} / {comment.likes || 0} likes
+                  </p>
+                </div>
+                <p className="mt-2 text-sm leading-7 text-ink/70">
+                  {comment.content}
+                </p>
+              </article>
+            ))}
+          </div>
+        ) : null}
+      </section>
     </div>
   );
 }

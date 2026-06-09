@@ -242,7 +242,7 @@ export function CancelButton({
       type="button"
       variant="outline"
       size="lg"
-      className={cn("w-full h-9! shrink-0", className)}
+      className={cn("w-full h-9! shrink-0 flex-1", className)}
       onClick={onCancel}
     >
       <RotateCcw />

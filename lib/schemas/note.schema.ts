@@ -34,10 +34,27 @@ export const NoteSchema = z.object({
     .min(20, { message: "Write a little more before saving." }),
   published: z.boolean().default(false),
   featured: z.boolean().default(false),
+  allowComments: z.boolean().default(false),
   bannerImage: optionalText,
   bannerCaption: optionalText,
-  tags: z.array(z.string().trim().min(1)).default([]),
+  tags: z.array(z.string().trim().min(1)).default(["Engineering"]),
+});
+
+export const NoteCommentSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, { message: "Name is required" })
+    .max(80, { message: "Name must be 80 characters or less" }),
+  email: z.email({ message: "Enter a valid email address" }),
+  website: optionalText,
+  content: z
+    .string()
+    .trim()
+    .min(3, { message: "Write a little more before sending." })
+    .max(1200, { message: "Comment must be 1200 characters or less" }),
 });
 
 export type TNotesHeroSchema = z.infer<typeof NotesHeroSchema>;
 export type TNoteSchema = z.infer<typeof NoteSchema>;
+export type TNoteCommentSchema = z.infer<typeof NoteCommentSchema>;

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 
 import { FRONTEND_BASE_URL } from "@/lib/constants";
-import { noteRepository } from "@/lib/db/repositories/notes";
+import {
+  noteCommentRepository,
+  noteRepository,
+} from "@/lib/db/repositories/notes";
 import { extractErrorMessage } from "@/lib/utils";
 
 const corsHeaders = {
@@ -29,6 +32,11 @@ export async function GET(
       );
     }
 
+    const [comments, relatedPosts] = await Promise.all([
+      noteCommentRepository.findByNoteSlug(slug),
+      noteRepository.findRelated(note, 4),
+    ]);
+
     return NextResponse.json(
       {
         success: true,
@@ -40,12 +48,32 @@ export async function GET(
           excerpt: note.excerpt || "",
           content: note.content,
           featured: note.featured,
+          allowComments: note.allowComments ?? false,
           bannerImage: note.bannerImage,
           bannerCaption: note.bannerCaption,
           tags: note.tags || [],
           readTime: note.readTime || "1 min read",
+          author: note.author || { name: "Somto", image: null },
           publishedAt: note.publishedAt?.toISOString() ?? null,
           updatedAt: (note.updatedAt ?? note.createdAt).toISOString(),
+          comments: comments.map((comment) => ({
+            id: comment._id?.toString(),
+            name: comment.name,
+            website: comment.website || "",
+            content: comment.content,
+            likes: comment.likes || 0,
+            createdAt: comment.createdAt.toISOString(),
+          })),
+          relatedPosts: relatedPosts.map((item) => ({
+            id: item._id?.toString(),
+            title: item.title,
+            slug: item.slug,
+            excerpt: item.excerpt || "",
+            bannerImage: item.bannerImage || "",
+            tags: item.tags || [],
+            readTime: item.readTime || "1 min read",
+            publishedAt: item.publishedAt?.toISOString() ?? null,
+          })),
         },
       },
       { headers: corsHeaders, status: 200 }

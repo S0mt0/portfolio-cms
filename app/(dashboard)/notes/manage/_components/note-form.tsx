@@ -38,6 +38,7 @@ const emptyNote: TNoteSchema = {
   content: "<p></p>",
   published: false,
   featured: false,
+  allowComments: false,
   bannerImage: "",
   bannerCaption: "",
   tags: [],
@@ -51,6 +52,7 @@ const toPayload = (note?: NoteFormData | null): TNoteSchema =>
         content: note.content,
         published: note.published,
         featured: note.featured,
+        allowComments: note.allowComments ?? false,
         bannerImage: note.bannerImage || "",
         bannerCaption: note.bannerCaption || "",
         tags: note.tags || [],
@@ -201,6 +203,15 @@ export function NoteForm({ mode, initialData }: NoteFormProps) {
             }
             checkedLabel="Featured"
             unCheckedLabel="Not Featured"
+          />
+          <PublishSwitch
+            checked={formData.allowComments}
+            hint="Allow visitors to leave comments on the public note."
+            onChange={(allowComments) =>
+              setFormData((prev) => ({ ...prev, allowComments }))
+            }
+            checkedLabel="Comments on"
+            unCheckedLabel="Comments off"
           />
         </ModuleCard>
 

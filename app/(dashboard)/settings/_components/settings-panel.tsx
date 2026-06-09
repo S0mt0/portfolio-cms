@@ -98,7 +98,7 @@ export function SettingsPanel({
           <p className="font-script text-3xl text-tomato">Allowed admins</p>
           <p className="text-sm leading-6 text-ink/60">
             These emails can use magic links, Google, or GitHub to enter the
-            CMS. Env admins are pinned and cannot be removed here.
+            CMS. Super admins are pinned and cannot be removed here.
           </p>
         </div>
 

@@ -3,7 +3,10 @@
 import { revalidatePath } from "next/cache";
 
 import { requireAdminSession } from "@/lib/auth/guards";
-import { noteRepository } from "@/lib/db/repositories/notes/note.repository";
+import {
+  noteCommentRepository,
+  noteRepository,
+} from "@/lib/db/repositories/notes";
 import { notesPageRepository } from "@/lib/db/repositories/notes/notes-page.repository";
 import {
   NoteSchema,
@@ -38,7 +41,7 @@ export async function updateNotesHero(values: TNotesHeroSchema) {
 }
 
 export async function createNote(values: TNoteSchema) {
-  await requireAdminSession();
+  const session = await requireAdminSession();
 
   const validated = NoteSchema.safeParse(values);
 
@@ -58,6 +61,10 @@ export async function createNote(values: TNoteSchema) {
       slug,
       readTime: getReadTime(data.content.replace(/<[^>]*>/g, " ")),
       publishedAt: data.published ? new Date() : null,
+      author: {
+        name: session.user.name || session.user.email || "Somto",
+        image: session.user.image || null,
+      },
     });
 
     revalidateNotes();
@@ -93,6 +100,7 @@ export async function updateNote(id: string, values: TNoteSchema) {
       publishedAt: data.published
         ? current?.publishedAt ?? new Date()
         : current?.publishedAt ?? null,
+      author: current?.author,
     });
 
     revalidateNotes();
@@ -110,6 +118,7 @@ export async function deleteNote(slug: string) {
 
   try {
     await noteRepository.deleteBySlug(slug);
+    await noteCommentRepository.deleteByNoteSlug(slug);
     revalidateNotes();
   } catch (error) {
     console.log({ error });
@@ -124,6 +133,9 @@ export async function deleteNotes(slugs: string[]) {
 
   try {
     await noteRepository.deleteManyBySlugs(slugs);
+    await Promise.all(
+      slugs.map((slug) => noteCommentRepository.deleteByNoteSlug(slug))
+    );
     revalidateNotes();
   } catch (error) {
     console.log({ error });

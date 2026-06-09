@@ -19,6 +19,52 @@ export const noteRepository = {
     return repository.findMany({ published: true });
   },
 
+  async findPublishedPaginated({
+    page,
+    limit,
+    query,
+  }: {
+    page: number;
+    limit: number;
+    query?: string;
+  }) {
+    const filter: Filter<NoteContent> = { published: true };
+
+    if (query) {
+      const search = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      filter.$or = [{ title: search }, { tags: search }];
+    }
+
+    const skip = Math.max(page - 1, 0) * limit;
+    const [items, total] = await Promise.all([
+      repository
+        .collection()
+        .find(filter)
+        .sort({ publishedAt: -1, updatedAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .toArray(),
+      repository.collection().countDocuments(filter),
+    ]);
+
+    return { items, total };
+  },
+
+  findRelated(note: NoteContent, limit: number) {
+    if (!note.tags?.length) return Promise.resolve([]);
+
+    return repository
+      .collection()
+      .find({
+        published: true,
+        slug: { $ne: note.slug },
+        tags: { $in: note.tags },
+      })
+      .sort({ publishedAt: -1, updatedAt: -1 })
+      .limit(limit)
+      .toArray();
+  },
+
   findFeatured(limit: number) {
     return repository
       .collection()

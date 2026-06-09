@@ -16,9 +16,24 @@ export interface NoteContent extends CmsDocumentBase {
   content: string;
   published: boolean;
   featured: boolean;
+  allowComments: boolean;
   bannerImage?: string;
   bannerCaption?: string;
   tags: string[];
   readTime: string;
   publishedAt?: Date | null;
+  author?: {
+    name: string;
+    image?: string | null;
+  };
+}
+
+export interface NoteCommentContent extends CmsDocumentBase {
+  noteSlug: string;
+  noteId?: string;
+  name: string;
+  email: string;
+  website?: string;
+  content: string;
+  likes: number;
 }

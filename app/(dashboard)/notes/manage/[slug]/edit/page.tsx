@@ -22,6 +22,7 @@ export default async function EditNotePage({
     content: note.content,
     published: note.published,
     featured: note.featured,
+    allowComments: note.allowComments ?? false,
     bannerImage: note.bannerImage || "",
     bannerCaption: note.bannerCaption || "",
     tags: note.tags || [],
