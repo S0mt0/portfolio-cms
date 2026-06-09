@@ -66,10 +66,9 @@ export function MagicLinkForm({ accessRequestEmail }: MagicLinkFormProps) {
   
   Please, kindly grant me access to your CMS studio.`;
 
-  const href = `mailto:${accessRequestEmail}?${new URLSearchParams({
-    subject,
-    body,
-  }).toString()}`;
+  const href = `mailto:talktosomto@gmail.com?subject=${encodeURIComponent(
+    subject
+  )}&body=${encodeURIComponent(body)}`;
 
   return (
     <div className="space-y-5">
