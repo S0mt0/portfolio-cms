@@ -1,9 +1,9 @@
 import {
   ArrowRight,
   BookOpen,
+  BriefcaseBusiness,
   FolderKanban,
   Layers3,
-  Computer,
   Quote,
 } from "lucide-react";
 import Link from "next/link";
@@ -23,10 +23,10 @@ const quickLinks = [
     color: "bg-honey/45",
   },
   {
-    title: "Profile",
-    href: "/profile",
-    description: "Identity, personal copy, CV link, and public positioning.",
-    icon: Computer,
+    title: "Experience",
+    href: "/experience",
+    description: "Timeline intro, operating note, work periods, and signals.",
+    icon: BriefcaseBusiness,
     color: "bg-blush/40",
   },
   {
@@ -38,7 +38,7 @@ const quickLinks = [
   },
   {
     title: "Notes",
-    href: "/notes",
+    href: "/notes/manage",
     description: "Draft and publish articles with the Tiptap editor.",
     icon: BookOpen,
     color: "bg-mint/45",

@@ -22,7 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { deleteNote, deleteNotes } from "@/lib/actions/notes.actions";
-import { cn } from "@/lib/utils";
+import { cn, formatDateTime } from "@/lib/utils";
 
 export type NoteListItem = {
   id: string;
@@ -88,7 +88,8 @@ export function NotesManager({
     const slugs = pendingDelete;
 
     startTransition(() => {
-      const action = slugs.length === 1 ? deleteNote(slugs[0]) : deleteNotes(slugs);
+      const action =
+        slugs.length === 1 ? deleteNote(slugs[0]) : deleteNotes(slugs);
 
       action
         .then((res) => {
@@ -197,7 +198,8 @@ export function NotesManager({
                 className="grid cursor-pointer gap-3 px-3 py-3 transition hover:bg-muted/25 lg:grid-cols-[2.5rem_minmax(0,1fr)_8rem_7rem_8rem] lg:items-center"
                 onClick={() => router.push(`/notes/manage/${note.slug}`)}
                 onKeyDown={(event) => {
-                  if (event.key === "Enter") router.push(`/notes/manage/${note.slug}`);
+                  if (event.key === "Enter")
+                    router.push(`/notes/manage/${note.slug}`);
                 }}
               >
                 <input
@@ -211,7 +213,7 @@ export function NotesManager({
                 <div className="min-w-0">
                   <p className="truncate text-sm font-black">{note.title}</p>
                   <p className="truncate font-mono text-xs text-ink/45">
-                    /notes/{note.slug} · {note.readTime} · updated {note.updatedAt}
+                    Last updated {formatDateTime(note.updatedAt)}
                   </p>
                 </div>
 

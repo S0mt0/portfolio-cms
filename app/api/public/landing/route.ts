@@ -21,13 +21,8 @@ export async function GET() {
     const { _id, createdAt, updatedAt, ...content } =
       await landingRepository.get();
     const [featuredBuilds, featuredNotes] = await Promise.all([
-      buildRepository
-        .collection()
-        .find({ featured: true })
-        .sort({ updatedAt: -1 })
-        .limit(content.selectedWorks.featuredCount || 2)
-        .toArray(),
-      noteRepository.findFeatured(content.selectedNotes.featuredCount || 2),
+      buildRepository.findFeatured(content.selectedWorks.featuredCount || 2),
+      noteRepository.findFeatured(content.selectedNotes.featuredCount || 4),
     ]);
 
     return NextResponse.json(
@@ -61,10 +56,7 @@ export async function GET() {
               title: note.title,
               slug: note.slug,
               excerpt: note.excerpt || "",
-              published: note.published,
-              featured: note.featured,
               bannerImage: note.bannerImage,
-              bannerCaption: note.bannerCaption,
               tags: note.tags || [],
               readTime: note.readTime || "1 min read",
               publishedAt: note.publishedAt?.toISOString() ?? null,

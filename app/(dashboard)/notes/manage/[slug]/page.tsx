@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { noteRepository } from "@/lib/db/repositories/notes";
 
 import { DashboardPageHeader } from "../../../_components/dashboard-page-header";
+import { formatDate } from "@/lib/utils";
 
 export default async function NoteDetailPage({
   params,
@@ -51,6 +52,9 @@ export default async function NoteDetailPage({
                 <Badge className="bg-honey text-ink">Featured</Badge>
               ) : null}
               <Badge variant="secondary">{note.readTime || "1 min read"}</Badge>
+              <small className="ml-2 underline">
+                Published {formatDate(note.publishedAt || note.createdAt)}
+              </small>
             </div>
 
             <div className="flex flex-wrap gap-2">

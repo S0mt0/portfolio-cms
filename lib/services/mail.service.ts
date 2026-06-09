@@ -2,15 +2,25 @@ import { type CreateEmailOptions, Resend } from "resend";
 
 class MailService {
   private sender: string;
-  private resend: Resend;
+  private resend?: Resend;
 
   constructor(private appName: string = "CMS - Talktosomto") {
     this.sender = `${this.appName} <no-reply@talktosomto.xyz>`;
+  }
+
+  private getClient() {
+    if (this.resend) return this.resend;
+
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not configured.");
+    }
+
     this.resend = new Resend(process.env.RESEND_API_KEY);
+    return this.resend;
   }
 
   async sendMail(options: Omit<CreateEmailOptions, "from">) {
-    return await this.resend.emails.send({
+    return await this.getClient().emails.send({
       ...options,
       from: this.sender,
     } as CreateEmailOptions);

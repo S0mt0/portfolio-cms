@@ -1,44 +1,26 @@
-import { Plus } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { contactPageRepository } from "@/lib/db/repositories/contact.repository";
 
 import { DashboardPageHeader } from "../_components/dashboard-page-header";
-import { ModuleCard } from "../../../components/common/module-card";
+import { ContactPageEditor } from "./_components/contact-page-editor";
 
-const channels = [
-  "Email",
-  "GitHub",
-  "X / Twitter",
-  "LinkedIn",
-  "YouTube",
-  "TikTok",
-];
+export default async function ContactPage() {
+  const content = await contactPageRepository.get();
+  const initialContent = {
+    hero: content.hero,
+    cvUrl: content.cvUrl,
+    recipientEmail: content.recipientEmail,
+    helperNote: content.helperNote,
+    socials: content.socials,
+  };
 
-export default function ContactPage() {
   return (
     <div>
       <DashboardPageHeader
         eyebrow="Contact"
         title="Keep the door useful."
-        description="Manage social handles, contact links, and the details people need when they want to work with you."
-        action={
-          <Button>
-            <Plus />
-            Add link
-          </Button>
-        }
+        description="Control the public contact page, social handles, CV document, and destination email for work requests."
       />
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {channels.map((channel) => (
-          <ModuleCard key={channel}>
-            <p className="font-script text-3xl text-tomato">{channel}</p>
-            <p className="mt-6 text-sm leading-6 text-ink/65">
-              Add the public URL, visibility, label, and short helper copy for
-              this contact channel.
-            </p>
-          </ModuleCard>
-        ))}
-      </div>
+      <ContactPageEditor content={initialContent} />
     </div>
   );
 }

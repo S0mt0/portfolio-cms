@@ -10,12 +10,12 @@ import {
   Home,
   ImageIcon,
   Layers3,
+  LayoutTemplate,
   LogOut,
   Mail,
   Menu,
   NotebookText,
   PanelRight,
-  Sparkles,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -59,15 +59,32 @@ const navItems: NavItem[] = [
       { label: "Aside", href: "/landing/aside", icon: PanelRight },
     ],
   },
-  { label: "Profile", href: "/profile", icon: Sparkles },
-  { label: "Experience", href: "/experience", icon: BriefcaseBusiness },
-  { label: "Builds", href: "/builds", icon: FolderKanban },
+  {
+    label: "Experience",
+    href: "/experience",
+    icon: BriefcaseBusiness,
+    children: [
+      { label: "Hero", href: "/experience/hero", icon: LayoutTemplate },
+      { kind: "separator", label: "Manage timeline" },
+      { label: "Timeline", href: "/experience/manage", icon: BriefcaseBusiness },
+    ],
+  },
+  {
+    label: "Builds",
+    href: "/builds",
+    icon: FolderKanban,
+    children: [
+      { label: "Hero", href: "/builds/hero", icon: LayoutTemplate },
+      { kind: "separator", label: "Manage builds" },
+      { label: "Builds", href: "/builds/manage", icon: FolderKanban },
+    ],
+  },
   {
     label: "Notes",
     href: "/notes",
     icon: BookOpen,
     children: [
-      { label: "Hero", href: "/notes/hero", icon: Sparkles },
+      { label: "Hero", href: "/notes/hero", icon: LayoutTemplate },
       { kind: "separator", label: "Manage notes" },
       { label: "Notes", href: "/notes/manage", icon: NotebookText },
     ],
@@ -97,7 +114,7 @@ export function DashboardShell({
     <>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex size-8 items-center justify-center rounded-xl border border-ink/15 bg-honey font-black overflow-hidden">
+          <div className="flex size-10 items-center justify-center rounded-xl border border-ink/15 bg-honey font-black overflow-hidden">
             {/* S */}
             <Image
               alt="Logo avatar"

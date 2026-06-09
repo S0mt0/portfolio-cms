@@ -41,9 +41,9 @@ import { useState, type ComponentType } from "react";
 import { FaYoutube } from "react-icons/fa";
 import { toast } from "sonner";
 
-import HorizontalRule from "@/components/common/tiptap/nodes/horizontal-rule-node-extension";
-import { ImageUploadButton } from "@/components/common/tiptap/nodes/image-upload-button";
-import ImageUploadNode from "@/components/common/tiptap/nodes/image-upload-node-extension";
+import HorizontalRule from "./nodes/horizontal-rule-node-extension";
+import { ImageUploadButton } from "./nodes/image-upload-button";
+import ImageUploadNode from "./nodes/image-upload-node-extension";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,7 +57,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FILE_CONFIG, handleUpload } from "@/lib/utils/upload";
+import { FILE_CONFIG, handleUpload } from "@/lib/services/upload.service";
 import { cn } from "@/lib/utils";
 
 type TextEditorProps = {
@@ -137,7 +137,6 @@ export function TextEditor({
   value = "",
   onChange,
   disabled = false,
-  placeholder = "Write clearly. Keep it useful, practical, and honest.",
 }: TextEditorProps) {
   const [dialogMode, setDialogMode] = useState<DialogMode | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -154,17 +153,17 @@ export function TextEditor({
       Highlight.configure({ multicolor: true }),
       Image.configure({
         HTMLAttributes: {
-          class: "rounded-xl border border-ink/15",
+          class: "rounded-none border border-ink/15",
         },
       }),
       Link.configure({
         openOnClick: false,
-        enableClickSelection: true,
+        // enableClickSelection: true,
         HTMLAttributes: {
           class: "cursor-pointer text-tomato underline underline-offset-4",
         },
       }),
-      Placeholder.configure({ placeholder }),
+      Placeholder,
       SubscriptExtension,
       SuperscriptExtension,
       TaskList,
@@ -208,8 +207,6 @@ export function TextEditor({
         autocomplete: "on",
         autocorrect: "off",
         autocapitalize: "on",
-        "aria-label": placeholder,
-        "data-placeholder": placeholder,
       },
     },
   });

@@ -17,7 +17,7 @@ import { TextEditor } from "@/components/common/tiptap/text-editor";
 import { Button } from "@/components/ui/button";
 import { createNote, updateNote } from "@/lib/actions/notes.actions";
 import type { TNoteSchema } from "@/lib/schemas/note.schema";
-import { handleImageUpload } from "@/lib/utils/upload";
+import { handleImageUpload } from "@/lib/services/upload.service";
 
 import { TagsInput } from "./note-tags";
 import Link from "next/link";

@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { format } from "date-fns";
 import { twMerge } from "tailwind-merge";
 import isEmail from "validator/lib/isEmail";
 
@@ -29,3 +30,11 @@ export const extractErrorMessage = (err: unknown) => {
     else return JSON.stringify(err) || "An error occurred";
   } else return JSON.stringify(err) || "Unknown error occurred";
 };
+
+export function formatDate(date: Date | string) {
+  return format(new Date(date), "dd MMMM, yyyy");
+}
+
+export function formatDateTime(date: Date | string) {
+  return format(new Date(date), "dd MMMM, yyyy h:mm a");
+}

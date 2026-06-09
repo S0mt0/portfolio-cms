@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { updateLandingHero } from "@/lib/actions/landing.actions";
 import { LandingContent } from "@/lib/types/landing";
-import { handleImageUpload } from "@/lib/utils/upload";
+import { handleImageUpload } from "@/lib/services/upload.service";
 import { THeroSectionSchema } from "@/lib/schemas/landing.schema";
 
 import { Button } from "@/components/ui/button";

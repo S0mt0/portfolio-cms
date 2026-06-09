@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 import { getUploadUrl } from "../actions/s3.actions";
-import { extractErrorMessage } from ".";
+import { extractErrorMessage } from "../utils";
 
 const extractFile = (source: TFile) => {
   const file =
@@ -122,6 +122,8 @@ export const handleDocumentUpload = (
     $options?.onError?.(message);
   }
 };
+
+export const handleUploadDocument = handleDocumentUpload;
 
 export const FILE_CONFIG = {
   IMAGE: {
