@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import { requireAdminSession } from "@/lib/auth/guards";
+import { requireAdminSession, requireEnvAdminSession } from "@/lib/auth/guards";
 import {
   noteCommentRepository,
   noteRepository,
@@ -60,6 +60,8 @@ export async function createNote(values: TNoteSchema) {
       ...data,
       slug,
       readTime: getReadTime(data.content.replace(/<[^>]*>/g, " ")),
+      views: 0,
+      readBy: [],
       publishedAt: data.published ? new Date() : null,
       author: {
         name: session.user.name || session.user.email || "Somto",
@@ -140,5 +142,18 @@ export async function deleteNotes(slugs: string[]) {
   } catch (error) {
     console.log({ error });
     return { error: "Could not delete selected notes" };
+  }
+}
+
+export async function deleteNoteComment(id: string, noteSlug: string) {
+  await requireEnvAdminSession();
+
+  try {
+    await noteCommentRepository.deleteThread(id);
+    revalidatePath(`/notes/manage/${noteSlug}`);
+    revalidatePath(`/api/public/notes/${noteSlug}`);
+  } catch (error) {
+    console.log({ error });
+    return { error: "Could not delete comment" };
   }
 }

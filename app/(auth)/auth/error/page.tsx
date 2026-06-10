@@ -19,7 +19,7 @@ const errorCopy: Record<
     title: "This account cannot enter the CMS.",
     message:
       "The CMS is private. New users can only be created when the email or GitHub identity is in the admin allowlist.",
-    hint: "Use DEFAULT_ADMIN_EMAILS for email accounts, or DEFAULT_ADMIN_GITHUB_IDS / DEFAULT_ADMIN_GITHUB_NAMES for GitHub.",
+    hint: "Request for admin access and try again.",
   },
 
   github: {

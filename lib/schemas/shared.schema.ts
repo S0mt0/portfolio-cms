@@ -1,6 +1,9 @@
 import * as z from "zod";
 
-export const optionalText = z.string().trim().optional().or(z.literal(""));
+export const optionalText = z.preprocess(
+  (value) => (value === null ? "" : value),
+  z.string().trim().optional().or(z.literal(""))
+);
 
 export const SectionIntroSchema = z.object({
   eyebrow: z.string().trim().default(""),

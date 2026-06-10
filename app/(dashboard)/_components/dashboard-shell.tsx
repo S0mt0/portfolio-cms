@@ -5,6 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   BriefcaseBusiness,
+  Clock3,
   FolderKanban,
   Gamepad2,
   Home,
@@ -96,6 +97,7 @@ const navItems: NavItem[] = [
   },
   { label: "Contact", href: "/contact", icon: Mail },
   { label: "Extra", href: "/extra", icon: Gamepad2 },
+  { label: "Logs", href: "/logs", icon: Clock3 },
   { label: "Settings", href: "/settings", icon: Settings },
 ];
 

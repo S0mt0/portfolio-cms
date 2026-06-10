@@ -6,7 +6,7 @@ import {
   noteRepository,
 } from "@/lib/db/repositories/notes";
 import { NoteCommentSchema } from "@/lib/schemas/note.schema";
-import { extractErrorMessage } from "@/lib/utils";
+import { extractErrorMessage, parseValidationError } from "@/lib/utils";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
@@ -48,9 +48,7 @@ export async function POST(
       return NextResponse.json(
         {
           success: false,
-          message: validated.error.issues
-            .map((issue) => issue.message)
-            .join(", "),
+          message: parseValidationError(validated.error.issues),
         },
         { headers: corsHeaders, status: 400 }
       );

@@ -21,6 +21,8 @@ export interface NoteContent extends CmsDocumentBase {
   bannerCaption?: string;
   tags: string[];
   readTime: string;
+  views?: number;
+  readBy?: string[];
   publishedAt?: Date | null;
   author?: {
     name: string;
@@ -40,12 +42,20 @@ export interface NoteCommentContent extends CmsDocumentBase {
   likedBy: string[];
 }
 
+export interface NewsletterSubscriber extends CmsDocumentBase {
+  email: string;
+  visitorId?: string;
+  source?: string;
+  page?: string;
+}
+
 export type PublicNoteField =
   | "title"
   | "slug"
   | "excerpt"
   | "tags"
   | "readTime"
+  | "views"
   | "bannerImage"
   | "publishedAt"
   | "updatedAt";

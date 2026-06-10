@@ -29,6 +29,7 @@ const toPublicNoteListItem = (note: NoteContent) => ({
   bannerImage: note.bannerImage || "",
   tags: note.tags || [],
   readTime: note.readTime || "1 min read",
+  views: note.views || 0,
   publishedAt: note.publishedAt?.toISOString() ?? null,
   updatedAt: (note.updatedAt ?? note.createdAt).toISOString(),
 });
@@ -56,7 +57,7 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
-    const totalPages = Math.max(Math.ceil(result.total / NOTE_LIMIT), 1);
+    const totalPages = Math.max(Math.ceil(result.total / limit), 1);
 
     return NextResponse.json(
       {
@@ -69,10 +70,10 @@ export async function GET(request: NextRequest) {
         pagination: {
           total: result.total,
           page: currentPage,
-          limit: NOTE_LIMIT,
+          limit,
           totalPages,
-          showingStart: result.total ? (currentPage - 1) * NOTE_LIMIT + 1 : 0,
-          showingEnd: Math.min(currentPage * NOTE_LIMIT, result.total),
+          showingStart: result.total ? (currentPage - 1) * limit + 1 : 0,
+          showingEnd: Math.min(currentPage * limit, result.total),
         },
       },
       { headers: corsHeaders, status: 200 }

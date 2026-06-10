@@ -14,6 +14,9 @@ import {
 import { DashboardPageHeader } from "../../../_components/dashboard-page-header";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { isEnvAdminEmail } from "@/lib/auth/allowlist";
+import { getCurrentSession } from "@/lib/auth/server";
+import { NoteCommentModeration } from "./_components/note-comment-moderation";
 
 export default async function NoteDetailPage({
   params,
@@ -21,9 +24,10 @@ export default async function NoteDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [note, comments] = await Promise.all([
+  const [note, comments, session] = await Promise.all([
     noteRepository.findBySlug(slug),
     noteCommentRepository.findByNoteSlug(slug),
+    getCurrentSession(),
   ]);
 
   if (!note) notFound();
@@ -59,6 +63,7 @@ export default async function NoteDetailPage({
                 <Badge className="bg-honey text-ink">Featured</Badge>
               ) : null}
               <Badge variant="secondary">{note.readTime || "1 min read"}</Badge>
+              <Badge variant="outline">{note.views || 0} reads</Badge>
               <small className="ml-2 underline">
                 Published {formatDate(note.publishedAt || note.createdAt)}
               </small>
@@ -123,21 +128,11 @@ export default async function NoteDetailPage({
         </div>
 
         {comments.length ? (
-          <div className="mt-5 divide-y divide-ink/10">
-            {comments.map((comment) => (
-              <article key={comment._id?.toString()} className="py-4">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-bold">{comment.name}</p>
-                  <p className="font-mono text-xs uppercase tracking-[0.14em] text-ink/45">
-                    {formatDate(comment.createdAt)} / {comment.likes || 0} likes
-                  </p>
-                </div>
-                <p className="mt-2 text-sm leading-7 text-ink/70">
-                  {comment.content}
-                </p>
-              </article>
-            ))}
-          </div>
+          <NoteCommentModeration
+            noteSlug={note.slug}
+            comments={comments}
+            canModerate={isEnvAdminEmail(session?.user.email)}
+          />
         ) : null}
       </section>
     </div>

@@ -2,13 +2,38 @@ import { betterAuth } from "better-auth/minimal";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins";
+import { type GenericEndpointContext } from "better-auth";
 
 import { BASE_URL } from "@/lib/constants";
 import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
 import { db, client } from "@/lib/db/config";
+import { adminLogRepository } from "@/lib/db/repositories/admin-log.repository";
 import { mailService } from "@/lib/services/mail.service";
+import { ObjectId } from "mongodb";
+
+const getRequestDetails = (context: GenericEndpointContext | null) => {
+  const headers = context?.headers;
+
+  const getHeader = (key: string) =>
+    typeof headers?.get === "function" ? headers.get(key) : undefined;
+
+  const forwardedFor = getHeader("x-forwarded-for");
+  const ip =
+    forwardedFor?.split(",")[0]?.trim() || getHeader("x-real-ip") || "";
+
+  return {
+    ip,
+    userAgent: getHeader("user-agent") || "",
+  };
+};
 
 export const auth = betterAuth({
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 1 * 60 * 60, // 1 Hour
+    },
+  },
   baseURL: BASE_URL,
   secret: process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET,
   database: mongodbAdapter(db, { client }),
@@ -30,6 +55,29 @@ export const auth = betterAuth({
               role: "admin",
             },
           };
+        },
+      },
+    },
+    session: {
+      create: {
+        async after(session, context) {
+          const details = getRequestDetails(context);
+          const user = await db
+            .collection("user")
+            .findOne({ _id: new ObjectId(session.userId) });
+
+          await adminLogRepository.recordLogin({
+            sessionToken: session.token,
+            userId: session.userId,
+            email: user?.email,
+            name: user?.name,
+            ...details,
+          });
+        },
+      },
+      delete: {
+        async after(session) {
+          await adminLogRepository.recordLogout(session?.token);
         },
       },
     },

@@ -13,6 +13,7 @@ function buildProjection(fields?: string[]) {
     "excerpt",
     "tags",
     "readTime",
+    "views",
     "bannerImage",
     "publishedAt",
     "updatedAt",
@@ -105,6 +106,27 @@ export const noteRepository = {
       .sort({ updatedAt: -1 })
       .limit(limit)
       .toArray();
+  },
+
+  async recordRead(slug: string, visitorId: string) {
+    const note = await repository.findOne({ slug, published: true });
+    if (!note) return null;
+
+    const hasRead = (note.readBy || []).includes(visitorId);
+    if (hasRead) {
+      return { note, counted: false };
+    }
+
+    await repository.collection().updateOne(
+      { _id: note._id },
+      {
+        $addToSet: { readBy: visitorId },
+        $inc: { views: 1 },
+      }
+    );
+
+    const updated = await repository.findOne({ _id: note._id });
+    return updated ? { note: updated, counted: true } : null;
   },
 
   findFiltered(filter: Filter<NoteContent> = {}) {

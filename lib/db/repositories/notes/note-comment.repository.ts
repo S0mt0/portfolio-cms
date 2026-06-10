@@ -42,4 +42,25 @@ export const noteCommentRepository = {
   deleteByNoteSlug(noteSlug: string) {
     return repository.collection().deleteMany({ noteSlug });
   },
+
+  async deleteThread(id: string) {
+    const comments = await repository.collection().find({}).toArray();
+    const ids = new Set([id]);
+    let changed = true;
+
+    while (changed) {
+      changed = false;
+      comments.forEach((comment) => {
+        const commentId = comment._id?.toString();
+        if (comment.parentId && ids.has(comment.parentId) && !ids.has(commentId)) {
+          ids.add(commentId);
+          changed = true;
+        }
+      });
+    }
+
+    return repository.collection().deleteMany({
+      _id: { $in: Array.from(ids).map((item) => new ObjectId(item)) },
+    });
+  },
 };
