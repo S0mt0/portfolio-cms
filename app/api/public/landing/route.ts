@@ -21,9 +21,12 @@ export async function GET() {
   try {
     const { _id, createdAt, updatedAt, ...content } =
       await landingRepository.get();
-    const [featuredBuilds, featuredNotes] = await Promise.all([
+
+    const [featuredBuilds, { items: recentNotes }] = await Promise.all([
       buildRepository.findFeatured(content.selectedWorks.featuredCount || 2),
-      noteRepository.findFeatured(content.selectedNotes.featuredCount || 4),
+      noteRepository.findPublishedPaginated({
+        limit: content.selectedNotes.featuredCount || 5,
+      }),
     ]);
 
     return NextResponse.json(
@@ -59,7 +62,7 @@ export async function GET() {
           },
           selectedNotes: {
             ...content.selectedNotes,
-            items: featuredNotes.map((note) => ({
+            items: recentNotes.map((note) => ({
               id: note._id?.toString(),
               title: note.title,
               slug: note.slug,

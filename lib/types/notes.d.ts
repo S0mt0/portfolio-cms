@@ -39,3 +39,13 @@ export interface NoteCommentContent extends CmsDocumentBase {
   likes: number;
   likedBy: string[];
 }
+
+export type PublicNoteField =
+  | "title"
+  | "slug"
+  | "excerpt"
+  | "tags"
+  | "readTime"
+  | "bannerImage"
+  | "publishedAt"
+  | "updatedAt";

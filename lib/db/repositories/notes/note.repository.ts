@@ -1,8 +1,34 @@
 import { createRepository } from "../base.repository";
-import type { NoteContent } from "@/lib/types/notes";
+import type { NoteContent, PublicNoteField } from "@/lib/types/notes";
 import { ObjectId, type Filter } from "mongodb";
 
 const repository = createRepository<NoteContent>("noteContent");
+
+function buildProjection(fields?: string[]) {
+  if (!fields?.length) return undefined;
+
+  const allowedList = [
+    "title",
+    "slug",
+    "excerpt",
+    "tags",
+    "readTime",
+    "bannerImage",
+    "publishedAt",
+    "updatedAt",
+  ] as const;
+
+  const validFields = fields.filter((field) =>
+    allowedList.includes(field as (typeof allowedList)[number])
+  );
+
+  if (!validFields.length) return undefined;
+
+  return validFields.reduce<Record<string, 1>>((projection, field) => {
+    projection[field] = 1;
+    return projection;
+  }, {});
+}
 
 export const noteRepository = {
   ...repository,
@@ -20,26 +46,33 @@ export const noteRepository = {
   },
 
   async findPublishedPaginated({
-    page,
+    page = 1,
     limit,
     query,
+    fields = [],
   }: {
-    page: number;
+    page?: number;
     limit: number;
     query?: string;
+    fields?: PublicNoteField[];
   }) {
     const filter: Filter<NoteContent> = { published: true };
 
     if (query) {
-      const search = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+      const search = new RegExp(
+        query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i"
+      );
       filter.$or = [{ title: search }, { tags: search }];
     }
 
     const skip = Math.max(page - 1, 0) * limit;
+    const projection = buildProjection(fields);
+
     const [items, total] = await Promise.all([
       repository
         .collection()
-        .find(filter)
+        .find(filter, projection ? { projection } : {})
         .sort({ publishedAt: -1, updatedAt: -1 })
         .skip(skip)
         .limit(limit)

@@ -71,7 +71,7 @@ export async function GET(
 ) {
   try {
     const { slug } = await params;
-    const visitorId = (await cookies()).get("somto_visitor")?.value;
+    const visitorId = (await cookies()).get("__sid")?.value;
     const note = await noteRepository.findBySlug(slug);
 
     if (!note || !note.published) {

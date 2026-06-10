@@ -24,11 +24,11 @@ export async function POST(
   try {
     const { id } = await params;
     const cookieStore = await cookies();
-    let visitorId = cookieStore.get("somto_visitor")?.value;
+    let visitorId = cookieStore.get("__sid")?.value;
 
     if (!visitorId) {
       visitorId = randomUUID();
-      cookieStore.set("somto_visitor", visitorId, {
+      cookieStore.set("__sid", visitorId, {
         httpOnly: true,
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",

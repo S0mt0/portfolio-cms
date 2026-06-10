@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { FRONTEND_BASE_URL } from "@/lib/constants";
-import { noteRepository, notesPageRepository } from "@/lib/db/repositories/notes";
-import type { NoteContent } from "@/lib/types/notes";
+import {
+  noteRepository,
+  notesPageRepository,
+} from "@/lib/db/repositories/notes";
+import type { NoteContent, PublicNoteField } from "@/lib/types/notes";
 import { extractErrorMessage } from "@/lib/utils";
 
 const corsHeaders = {
@@ -30,20 +33,29 @@ const toPublicNoteListItem = (note: NoteContent) => ({
   updatedAt: (note.updatedAt ?? note.createdAt).toISOString(),
 });
 
-export async function GET(request: Request) {
-  try {
-    const url = new URL(request.url);
-    const currentPage = Math.max(Number(url.searchParams.get("page") || 1), 1);
-    const query = url.searchParams.get("q")?.trim() || "";
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
 
+  const fieldsParam = searchParams.get("fields");
+  const fields = (
+    fieldsParam ? fieldsParam.split(",").filter(Boolean) : []
+  ) as PublicNoteField[];
+
+  const query = searchParams.get("q") || "";
+  const currentPage = Math.max(Number(searchParams.get("page") || 1), 1);
+  const limit = Number(searchParams.get("limit")) || NOTE_LIMIT;
+
+  try {
     const [page, result] = await Promise.all([
       notesPageRepository.get(),
       noteRepository.findPublishedPaginated({
         page: currentPage,
-        limit: NOTE_LIMIT,
+        limit,
         query,
+        fields,
       }),
     ]);
+
     const totalPages = Math.max(Math.ceil(result.total / NOTE_LIMIT), 1);
 
     return NextResponse.json(
