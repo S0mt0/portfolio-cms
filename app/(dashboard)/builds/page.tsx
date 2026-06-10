@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function BuildsPage() {
-  redirect("/builds/hero");
+  redirect("/builds/manage");
 }

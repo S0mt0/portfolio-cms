@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
+  CancelButton,
   NumberField,
   SaveButton,
   TextareaField,
@@ -100,24 +101,12 @@ export function WorksForm(props: WorksFormProps) {
         Featured works will come from build records marked as featured. This
         page only controls the section copy and archive link.
       </p>
-      <div className="flex flex-col gap-3 sm:flex-row">
-        {isDirty ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            className="w-full flex-1"
-            onClick={onCancel}
-          >
-            <RotateCcw />
-            Cancel
-          </Button>
-        ) : null}
+      <div className="grid sm:grid-cols-2 gap-3">
+        {isDirty ? <CancelButton onCancel={onCancel} /> : null}
         <SaveButton
           isPending={isPending}
           onSubmit={onSubmit}
           disabled={!isDirty}
-          className="flex-1"
         />
       </div>
     </ModuleCard>

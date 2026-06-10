@@ -1,9 +1,6 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
-
-import { SaveButton } from "@/components/common/form-controls";
-import { Button } from "@/components/ui/button";
+import { CancelButton, SaveButton } from "@/components/common/form-controls";
 
 type ContactEditorActionsProps = {
   isDirty: boolean;
@@ -21,16 +18,12 @@ export function ContactEditorActions({
   return (
     <div className="flex flex-col gap-3 border-t border-ink/10 pt-5 md:flex-row md:justify-end xl:col-span-2">
       {isDirty ? (
-        <Button type="button" variant="outline" size="lg" onClick={onCancel}>
-          <RotateCcw />
-          Cancel
-        </Button>
+        <CancelButton onCancel={onCancel} className="sm:max-w-40" />
       ) : null}
       <SaveButton
         className="md:w-auto"
         isPending={isPending}
         disabled={!isDirty}
-        label="Save contact page"
         onSubmit={onSubmit}
       />
     </div>

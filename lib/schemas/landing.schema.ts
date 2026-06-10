@@ -38,11 +38,7 @@ export const LandingSelectedWorksSchema = z.object({
     .trim()
     .min(1, { message: "Eyebrow is required" })
     .max(60, { message: "Eyebrow must be 60 characters or less" }),
-  title: z
-    .string()
-    .trim()
-    .min(1, { message: "Title is required" })
-    .max(120, { message: "Title must be 120 characters or less" }),
+  title: optionalText,
   linkLabel: z
     .string()
     .trim()

@@ -9,16 +9,21 @@ import {
   envAdminEmails,
   normalizeAdminEmail,
 } from "@/lib/db/repositories/admin-allowlist.repository";
+import { isValidEmail } from "../utils";
+import { mailService } from "../services";
 
 export async function addAdminEmail(email: string) {
   await requireAdminSession();
 
   const normalized = normalizeAdminEmail(email);
-  if (!normalized || !normalized.includes("@")) {
+  if (!normalized || !isValidEmail(normalized)) {
     return { error: "Enter a valid admin email." };
   }
 
-  await adminAllowlistRepository.add(normalized);
+  await Promise.all([
+    adminAllowlistRepository.add(normalized),
+    mailService.sendAccessGrantedEmail(normalized),
+  ]);
   revalidatePath("/settings");
 }
 

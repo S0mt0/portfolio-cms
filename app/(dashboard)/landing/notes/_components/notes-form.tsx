@@ -96,19 +96,9 @@ export function NotesForm(props: NotesFormProps) {
           setFormData((prev) => ({ ...prev, featuredCount }))
         }
       />
-      <p className="rounded-xl border border-ink/10 bg-muted/30 px-4 py-3 text-sm leading-6 text-ink/60">
-        Featured notes will come from note records marked as featured. This page
-        only controls the section copy and archive link.
-      </p>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="grid sm:grid-cols-2 gap-3">
         {isDirty ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            className="w-full flex-1"
-            onClick={onCancel}
-          >
+          <Button type="button" variant="outline" size="lg" onClick={onCancel}>
             <RotateCcw />
             Cancel
           </Button>
@@ -117,7 +107,6 @@ export function NotesForm(props: NotesFormProps) {
           isPending={isPending}
           onSubmit={onSubmit}
           disabled={!isDirty}
-          className="flex-1"
         />
       </div>
     </ModuleCard>

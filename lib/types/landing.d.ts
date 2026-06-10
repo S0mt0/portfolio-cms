@@ -21,14 +21,14 @@ export interface LandingContent extends CmsDocumentBase {
   };
   selectedWorks: {
     eyebrow: string;
-    title: string;
+    title?: string;
     linkLabel: string;
     linkHref: string;
     featuredCount: number;
   };
   selectedNotes: {
     eyebrow: string;
-    title: string;
+    title?: string;
     linkLabel: string;
     linkHref: string;
     featuredCount: number;

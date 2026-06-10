@@ -12,6 +12,7 @@ import { THeroSectionSchema } from "@/lib/schemas/landing.schema";
 
 import { Button } from "@/components/ui/button";
 import {
+  CancelButton,
   ImagePicker,
   PublishSwitch,
   SaveButton,
@@ -224,25 +225,13 @@ export const HeroForm = (hero: LandingContent["hero"]) => {
           onChange={setSnapshotsText}
         />
 
-        <div className="flex flex-col gap-3 sm:flex-row">
-          {isDirty ? (
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              className="w-full flex-1"
-              onClick={onCancel}
-            >
-              <RotateCcw />
-              Cancel
-            </Button>
-          ) : null}
+        <div className="grid sm:grid-cols-2 gap-3">
+          {isDirty ? <CancelButton onCancel={onCancel} /> : null}
 
           <SaveButton
             isPending={isPending}
             onSubmit={onSubmit}
             disabled={!isDirty}
-            className="flex-1"
           />
         </div>
       </ModuleCard>

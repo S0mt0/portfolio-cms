@@ -56,12 +56,11 @@ export function BuildsHeroForm(props: TBuildsHeroSchema) {
         }
       />
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="grid sm:grid-cols-2 gap-3">
         {isDirty ? <CancelButton onCancel={() => setFormData(props)} /> : null}
         <SaveButton
           isPending={isPending}
           disabled={!isDirty}
-          className="flex-1"
           onSubmit={onSubmit}
         />
       </div>

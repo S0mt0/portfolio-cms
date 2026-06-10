@@ -4,7 +4,7 @@ import { FRONTEND_BASE_URL } from "@/lib/constants";
 import { contactPageRepository } from "@/lib/db/repositories/contact.repository";
 import { ContactMessageSchema } from "@/lib/schemas/contact.schema";
 import { mailService } from "@/lib/services/mail.service";
-import { extractErrorMessage } from "@/lib/utils";
+import { extractErrorMessage, parseValidationError } from "@/lib/utils";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
@@ -44,7 +44,6 @@ export async function GET() {
       { headers: corsHeaders, status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching contact page:", error);
     return NextResponse.json(
       {
         success: false,
@@ -64,9 +63,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: validated.error.issues
-            .map((issue) => issue.message)
-            .join(", "),
+          message: parseValidationError(validated.error.issues),
         },
         { headers: corsHeaders, status: 400 }
       );

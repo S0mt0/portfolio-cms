@@ -1,4 +1,5 @@
 import { type CreateEmailOptions, Resend } from "resend";
+import { BASE_URL } from "../constants";
 
 class MailService {
   private sender: string;
@@ -36,6 +37,19 @@ class MailService {
       });
     } catch (error) {
       console.error("[error_sending_magic_link_email]: ", error);
+    }
+  }
+
+  async sendAccessGrantedEmail(to: string) {
+    try {
+      await this.sendMail({
+        subject: "CMS Access Granted",
+        to,
+        text: `You've been granted access to the Talktosomto CMS Studio`,
+        html: `You've been granted access to the Talktosomto.xyz CMS Studio. Login <a href="${BASE_URL}">here</a>.`,
+      });
+    } catch (error) {
+      console.error("[error_sending_access_granted_email]: ", error);
     }
   }
 }

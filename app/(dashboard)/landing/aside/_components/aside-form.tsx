@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
+  CancelButton,
   SaveButton,
   TextareaField,
   TextField,
@@ -189,16 +190,7 @@ export function AsideForm(props: AsideFormProps) {
 
       <div className="flex flex-col gap-3 sm:flex-row">
         {isDirty ? (
-          <Button
-            type="button"
-            variant="outline"
-            size="lg"
-            className="w-full sm:max-w-52"
-            onClick={onCancel}
-          >
-            <RotateCcw />
-            Cancel
-          </Button>
+          <CancelButton onCancel={onCancel} className="sm:max-w-52" />
         ) : null}
         <SaveButton
           isPending={isPending}
