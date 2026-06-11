@@ -1,5 +1,5 @@
-@import '../styles/_variables.scss';
-@import '../styles/_keyframe-animations.scss';
+@import "../styles/_variables.scss";
+@import "../styles/_keyframe-animations.scss";
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -208,12 +208,71 @@ body {
 .notes-editor pre {
   margin-block: 1rem;
   overflow-x: auto;
-  border-radius: 1rem;
+  /* border-radius: 1rem; */
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  background: #100d0a;
   padding: 1rem;
   font-family: var(--font-mono);
   font-size: 0.875rem;
+  line-height: 1.7;
+  color: #d7dee7;
+}
+
+.notes-editor pre code {
+  display: block;
+  min-width: max-content;
+  font-family: inherit;
+}
+
+.notes-editor .hljs-keyword,
+.notes-editor .hljs-literal,
+.notes-editor .hljs-selector-tag {
+  color: #ff7b72;
+}
+
+.notes-editor .hljs-title,
+.notes-editor .hljs-title.function_,
+.notes-editor .hljs-function .hljs-title {
+  color: #d2a8ff;
+}
+
+.notes-editor .hljs-type,
+.notes-editor .hljs-class .hljs-title,
+.notes-editor .hljs-built_in {
+  color: #ffa657;
+}
+
+.notes-editor .hljs-attr,
+.notes-editor .hljs-property,
+.notes-editor .hljs-variable,
+.notes-editor .hljs-template-variable {
+  color: #79c0ff;
+}
+
+.notes-editor .hljs-string,
+.notes-editor .hljs-regexp,
+.notes-editor .hljs-symbol {
+  color: #a5d6ff;
+}
+
+.notes-editor .hljs-number,
+.notes-editor .hljs-boolean {
+  color: #79c0ff;
+}
+
+.notes-editor .hljs-comment,
+.notes-editor .hljs-quote {
+  color: #8b949e;
+}
+
+.notes-editor .hljs-meta,
+.notes-editor .hljs-doctag {
+  color: #7ee787;
+}
+
+.notes-editor .hljs-operator,
+.notes-editor .hljs-punctuation {
+  color: #d7dee7;
 }
 
 .notes-editor iframe {

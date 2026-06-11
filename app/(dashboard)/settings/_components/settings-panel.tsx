@@ -115,7 +115,7 @@ export function SettingsPanel({
             onClick={submitEmail}
           >
             <Plus />
-            Add admin
+            {isPending ? "Please wait..." : "Add admin"}
           </Button>
         </div>
 

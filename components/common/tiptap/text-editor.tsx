@@ -23,6 +23,7 @@ import {
   Underline,
   Undo2,
 } from "lucide-react";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -37,10 +38,17 @@ import { TaskItem, TaskList } from "@tiptap/extension-list";
 import { Selection } from "@tiptap/extensions";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useState, type ComponentType } from "react";
 import { FaYoutube } from "react-icons/fa";
 import { toast } from "sonner";
 
+import {
+  codeLanguages,
+  getCodeLanguageLabel,
+  lowlight,
+  type CodeLanguage,
+} from "./nodes/code-highlighting";
 import HorizontalRule from "./nodes/horizontal-rule-node-extension";
 import { ImageUploadButton } from "./nodes/image-upload-button";
 import ImageUploadNode from "./nodes/image-upload-node-extension";
@@ -133,6 +141,22 @@ function applyList(editor: Editor, type: ListType) {
   return editor.chain().focus().toggleTaskList().run();
 }
 
+function applyCodeBlock(editor: Editor, language: CodeLanguage) {
+  return editor.chain().focus().toggleCodeBlock({ language }).run();
+}
+
+function applyCodeLanguage(editor: Editor, language: CodeLanguage) {
+  if (editor.isActive("codeBlock")) {
+    return editor
+      .chain()
+      .focus()
+      .updateAttributes("codeBlock", { language })
+      .run();
+  }
+
+  return editor.chain().focus().setCodeBlock({ language }).run();
+}
+
 export function TextEditor({
   value = "",
   onChange,
@@ -141,14 +165,21 @@ export function TextEditor({
   const [dialogMode, setDialogMode] = useState<DialogMode | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [highlightOpen, setHighlightOpen] = useState(false);
+  const [selectedCodeLanguage, setSelectedCodeLanguage] =
+    useState<CodeLanguage>("typescript");
 
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        codeBlock: false,
         heading: {
           levels: [1, 2, 3, 4],
         },
         horizontalRule: false,
+      }),
+      CodeBlockLowlight.configure({
+        defaultLanguage: "typescript",
+        lowlight,
       }),
       Highlight.configure({ multicolor: true }),
       Image.configure({
@@ -337,7 +368,15 @@ export function TextEditor({
           label="Code"
           icon={Code}
           active={editor.isActive("codeBlock")}
-          onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+          onClick={() => applyCodeBlock(editor, selectedCodeLanguage)}
+        />
+        <CodeLanguageDropdown
+          editor={editor}
+          selectedLanguage={selectedCodeLanguage}
+          onSelectLanguage={(language) => {
+            setSelectedCodeLanguage(language);
+            applyCodeLanguage(editor, language);
+          }}
         />
         <ToolbarButton
           label="Underline"
@@ -459,6 +498,60 @@ export function TextEditor({
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
+}
+
+function CodeLanguageDropdown({
+  editor,
+  selectedLanguage,
+  onSelectLanguage,
+}: {
+  editor: Editor;
+  selectedLanguage: CodeLanguage;
+  onSelectLanguage: (language: CodeLanguage) => void;
+}) {
+  const activeLanguage = editor.getAttributes("codeBlock")
+    .language as CodeLanguage | null;
+  const language = activeLanguage || selectedLanguage;
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button
+          type="button"
+          title="Code language"
+          variant="outline"
+          size="sm"
+          className="h-9 rounded-xl px-2"
+          onMouseDown={(event) => event.preventDefault()}
+        >
+          <span className="text-xs font-bold">
+            {getCodeLanguageLabel(language)}
+          </span>
+          <ChevronDown className="size-3" />
+        </Button>
+      </DropdownMenu.Trigger>
+
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="start"
+          className="z-50 min-w-40 rounded-2xl border border-ink/15 bg-paper p-1 shadow-[4px_4px_0_var(--ink)] dark:shadow-[4px_4px_0_rgba(247,243,232,0.24)]"
+        >
+          {codeLanguages.map((codeLanguage) => (
+            <DropdownMenu.Item
+              key={codeLanguage.value}
+              className={cn(
+                "cursor-pointer rounded-xl px-3 py-2 text-sm font-bold outline-none transition hover:bg-muted focus:bg-muted",
+                language === codeLanguage.value && "bg-muted text-tomato"
+              )}
+              onSelect={() => onSelectLanguage(codeLanguage.value)}
+            >
+              {codeLanguage.label}
+            </DropdownMenu.Item>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }
 
