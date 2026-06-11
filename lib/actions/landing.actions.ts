@@ -13,7 +13,7 @@ import {
   TLandingSelectedWorksSchema,
 } from "../schemas/landing.schema";
 import { requireAdminSession } from "../auth/guards";
-import { parseValidationError } from "../utils";
+import { extractErrorMessage, parseValidationError } from "../utils";
 
 function revalidateLanding() {
   revalidatePath("/");
@@ -54,8 +54,9 @@ export async function updateLandingHero(values: THeroSectionSchema) {
 
     revalidateLanding();
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not update hero section" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again";
+    return { error: message };
   }
 }
 
@@ -83,8 +84,9 @@ export async function updateLandingWorks(values: TLandingSelectedWorksSchema) {
 
     revalidateLanding();
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not update selected works" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again";
+    return { error: message };
   }
 }
 
@@ -98,6 +100,8 @@ export async function updateLandingNotes(values: TLandingSelectedNotesSchema) {
   const content = await landingRepository.get();
   const data = validated.data;
 
+  console.log(data);
+
   try {
     await landingRepository.update({
       key: "landing",
@@ -107,13 +111,15 @@ export async function updateLandingNotes(values: TLandingSelectedNotesSchema) {
         title: data.title,
         linkLabel: data.linkLabel,
         linkHref: data.linkHref,
+        featuredCount: data.featuredCount,
       },
     });
 
     revalidateLanding();
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not update selected notes" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again";
+    return { error: message };
   }
 }
 
@@ -143,7 +149,8 @@ export async function updateLandingAside(values: TLandingAsideSchema) {
 
     revalidateLanding();
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not update aside" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again";
+    return { error: message };
   }
 }

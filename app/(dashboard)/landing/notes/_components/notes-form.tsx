@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 import {
+  CancelButton,
   NumberField,
   SaveButton,
   TextareaField,
@@ -40,6 +41,8 @@ export function NotesForm(props: NotesFormProps) {
     useState<TLandingSelectedNotesSchema>(initialPayload);
   const [isPending, startTransition] = useTransition();
   const isDirty = JSON.stringify(formData) !== JSON.stringify(initialPayload);
+
+  const [isCountInvalid, setIsCountInvalid] = useState(false);
 
   const onCancel = () => setFormData(initialPayload);
 
@@ -90,23 +93,19 @@ export function NotesForm(props: NotesFormProps) {
       <NumberField
         label="Featured notes count"
         defaultValue={formData.featuredCount}
-        max={10}
-        hint="The public endpoint will return up to this many featured note records."
+        max={20}
+        hint="The public endpoint will return up to this many note records."
         onChange={(featuredCount) =>
           setFormData((prev) => ({ ...prev, featuredCount }))
         }
+        onValidityChange={setIsCountInvalid}
       />
       <div className="grid sm:grid-cols-2 gap-3">
-        {isDirty ? (
-          <Button type="button" variant="outline" size="lg" onClick={onCancel}>
-            <RotateCcw />
-            Cancel
-          </Button>
-        ) : null}
+        {isDirty ? <CancelButton onCancel={onCancel} /> : null}
         <SaveButton
           isPending={isPending}
           onSubmit={onSubmit}
-          disabled={!isDirty}
+          disabled={!isDirty || isCountInvalid}
         />
       </div>
     </ModuleCard>

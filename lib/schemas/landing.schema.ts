@@ -49,7 +49,10 @@ export const LandingSelectedWorksSchema = z.object({
     .trim()
     .min(1, { message: "Link href is required" })
     .max(180, { message: "Link href must be 180 characters or less" }),
-  featuredCount: z.number().max(10).default(2),
+  featuredCount: z
+    .number()
+    .max(20, { message: "Featured note count must be 20 or less" })
+    .default(2),
 });
 
 export const LandingSelectedNotesSchema = LandingSelectedWorksSchema;
@@ -80,10 +83,10 @@ export const LandingAsideSchema = z.object({
   toolboxDescription: z
     .string()
     .trim()
-    .min(1, { message: "Toolbox description is required" })
     .max(220, {
       message: "Toolbox description must be 220 characters or less",
-    }),
+    })
+    .optional(),
   skillGroups: z.array(LandingSkillGroupSchema).default([]),
 });
 

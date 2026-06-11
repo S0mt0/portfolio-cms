@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, type ChangeEvent, type RefObject } from "react";
+import { useEffect, useState, type ChangeEvent, type RefObject } from "react";
 import { ImagePlus, RotateCcw, Save, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -94,11 +94,24 @@ export function NumberField({
   max,
   min = 0,
   onChange,
-}: NumberFieldProps) {
+  onValidityChange,
+}: NumberFieldProps & {
+  onValidityChange?: (isInvalid: boolean) => void;
+}) {
   const [value, setValue] = useState(String(defaultValue));
+
   const parsedValue = value === "" ? undefined : Number(value);
-  const isAboveMax = parsedValue !== undefined && parsedValue > max;
+
+  const isAboveMax =
+    parsedValue !== undefined && max !== undefined && parsedValue > max;
+
   const isBelowMin = parsedValue !== undefined && parsedValue < min;
+
+  const isInvalid = isAboveMax || isBelowMin;
+
+  useEffect(() => {
+    onValidityChange?.(isInvalid);
+  }, [isInvalid, onValidityChange]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const nextValue = event.target.value.replace(/\D/g, "");
@@ -106,7 +119,8 @@ export function NumberField({
 
     setValue(nextValue);
 
-    if (nextNumber !== undefined && nextNumber <= max && nextNumber >= min) {
+    // Important: always send the actual typed value to the parent
+    if (nextNumber !== undefined) {
       onChange(nextNumber);
     }
   };
@@ -114,6 +128,7 @@ export function NumberField({
   return (
     <div className={cn("space-y-2", className)}>
       <Label htmlFor={name}>{label}</Label>
+
       <Input
         id={name}
         name={name}
@@ -123,14 +138,17 @@ export function NumberField({
         pattern="[0-9]*"
         autoComplete="off"
         onChange={handleChange}
-        aria-invalid={isAboveMax || isBelowMin}
+        aria-invalid={isInvalid}
       />
+
       {hint ? <p className="text-xs leading-5 text-ink/55">{hint}</p> : null}
+
       {isAboveMax ? (
         <p className="rounded-lg border border-tomato/35 bg-tomato/10 px-3 py-2 text-xs font-semibold leading-5 text-tomato">
           Maximum allowed value is {max}. This value will not be saved.
         </p>
       ) : null}
+
       {isBelowMin ? (
         <p className="rounded-lg border border-tomato/35 bg-tomato/10 px-3 py-2 text-xs font-semibold leading-5 text-tomato">
           Minimum allowed value is {min}. This value will not be saved.

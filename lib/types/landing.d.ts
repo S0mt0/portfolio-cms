@@ -38,7 +38,7 @@ export interface LandingContent extends CmsDocumentBase {
     studyDescription: string;
     studyItems: string[];
     toolboxTitle: string;
-    toolboxDescription: string;
+    toolboxDescription?: string;
     skillGroups: LandingSkillGroup[];
   };
 }

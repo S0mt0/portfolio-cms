@@ -42,6 +42,8 @@ export function WorksForm(props: WorksFormProps) {
   const [isPending, startTransition] = useTransition();
   const isDirty = JSON.stringify(formData) !== JSON.stringify(initialPayload);
 
+  const [isCountInvalid, setIsCountInvalid] = useState(false);
+
   const onCancel = () => setFormData(initialPayload);
 
   const onSubmit = () => {
@@ -96,6 +98,7 @@ export function WorksForm(props: WorksFormProps) {
         onChange={(featuredCount) =>
           setFormData((prev) => ({ ...prev, featuredCount }))
         }
+        onValidityChange={setIsCountInvalid}
       />
       <p className="rounded-xl border border-ink/10 bg-muted/30 px-4 py-3 text-sm leading-6 text-ink/60">
         Featured works will come from build records marked as featured. This
@@ -106,7 +109,7 @@ export function WorksForm(props: WorksFormProps) {
         <SaveButton
           isPending={isPending}
           onSubmit={onSubmit}
-          disabled={!isDirty}
+          disabled={!isDirty || isCountInvalid}
         />
       </div>
     </ModuleCard>

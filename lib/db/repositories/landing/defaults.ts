@@ -46,14 +46,14 @@ export const defaultLandingContent: Omit<
     title: "Small proof I can explain",
     linkLabel: "All builds",
     linkHref: "/builds",
-    featuredCount: 2,
+    featuredCount: 3,
   },
   selectedNotes: {
     eyebrow: "Selected notes",
     title: "Writing on engineering, Web3, and other fun stuff (maybe)",
     linkLabel: "All notes",
     linkHref: "/notes",
-    featuredCount: 4,
+    featuredCount: 10,
   },
   aside: {
     studyTitle: "Current study",
