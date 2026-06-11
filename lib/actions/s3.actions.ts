@@ -20,7 +20,7 @@ export async function getUploadUrl(
   contentType: string,
   folder: S3FileFolders = "documents"
 ) {
-  const key = `${folder}/${Date.now()}-${filename}`;
+  const key = `${folder}/${filename}`;
 
   const command = new PutObjectCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME,
