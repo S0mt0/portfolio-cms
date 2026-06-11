@@ -72,6 +72,7 @@ export function formatDateTime(
     ? `${formatDate(date)} ${date.toLocaleTimeString("en-NG", {
         hour: "2-digit",
         minute: "2-digit",
+        hour12: true,
       })}`
     : fallback || "Still active";
 }
