@@ -62,7 +62,7 @@ const buildCommentTree = (
 };
 
 export async function OPTIONS() {
-  return new Response(null, { headers: corsHeaders });
+  return new Response(null, { headers: corsHeaders, status: 204 });
 }
 
 export async function GET(
@@ -108,15 +108,10 @@ export async function GET(
           updatedAt: (note.updatedAt ?? note.createdAt).toISOString(),
           comments: buildCommentTree(comments, visitorId),
           relatedPosts: relatedPosts.map((item) => ({
-            id: item._id?.toString(),
             title: item.title,
             slug: item.slug,
             excerpt: item.excerpt || "",
             bannerImage: item.bannerImage || "",
-            tags: item.tags || [],
-            readTime: item.readTime || "1 min read",
-            views: item.views || 0,
-            publishedAt: item.publishedAt?.toISOString() ?? null,
           })),
         },
       },

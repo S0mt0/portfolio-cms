@@ -72,7 +72,6 @@ export const LandingAsideSchema = z.object({
   studyDescription: z
     .string()
     .trim()
-    .min(1, { message: "Study description is required" })
     .max(220, { message: "Study description must be 220 characters or less" }),
   studyItems: z.array(z.string().trim().min(1)).default([]),
   toolboxTitle: z

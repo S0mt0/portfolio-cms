@@ -16,7 +16,7 @@ const corsHeaders = {
 };
 
 export async function OPTIONS() {
-  return new Response(null, { headers: corsHeaders });
+  return new Response(null, { headers: corsHeaders, status: 204 });
 }
 
 export async function POST(

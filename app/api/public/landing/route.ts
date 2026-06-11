@@ -14,7 +14,7 @@ const corsHeaders = {
 };
 
 export async function OPTIONS() {
-  return new Response(null, { headers: corsHeaders });
+  return new Response(null, { headers: corsHeaders, status: 204 });
 }
 
 export async function GET() {
@@ -82,7 +82,6 @@ export async function GET() {
       { headers: corsHeaders, status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching landing page:", error);
     const message =
       extractErrorMessage(error) || "Something went wrong, try again.";
     return Response.json(

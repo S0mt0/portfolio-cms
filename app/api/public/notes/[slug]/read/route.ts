@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { FRONTEND_BASE_URL } from "@/lib/constants";
 import { noteRepository } from "@/lib/db/repositories/notes";
 import { extractErrorMessage } from "@/lib/utils";
+import { isProduction } from "better-auth";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
@@ -14,7 +15,7 @@ const corsHeaders = {
 };
 
 export async function OPTIONS() {
-  return new Response(null, { headers: corsHeaders });
+  return new Response(null, { headers: corsHeaders, status: 204 });
 }
 
 export async function POST(
@@ -30,8 +31,8 @@ export async function POST(
       visitorId = randomUUID();
       cookieStore.set("__sid", visitorId, {
         httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: isProduction ? "none" : "lax",
+        secure: isProduction,
         maxAge: 60 * 60 * 24 * 365,
         path: "/",
       });

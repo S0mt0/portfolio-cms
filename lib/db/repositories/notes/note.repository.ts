@@ -135,7 +135,7 @@ export const noteRepository = {
 
   updateById(
     id: string,
-    data: Partial<Omit<NoteContent, "_id" | "createdAt" | "updatedAt">>
+    data: Partial<Omit<NoteContent, "_id" | "createdAt">>
   ) {
     return repository.updateOne({ _id: new ObjectId(id) }, data);
   },

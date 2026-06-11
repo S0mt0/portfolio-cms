@@ -14,7 +14,12 @@ import {
   type TNoteSchema,
   type TNotesHeroSchema,
 } from "@/lib/schemas/note.schema";
-import { generateSlug, getReadTime, parseValidationError } from "@/lib/utils";
+import {
+  extractErrorMessage,
+  generateSlug,
+  getReadTime,
+  parseValidationError,
+} from "@/lib/utils";
 
 function revalidateNotes() {
   revalidatePath("/notes");
@@ -35,7 +40,8 @@ export async function updateNotesHero(values: TNotesHeroSchema) {
     await notesPageRepository.updateHero(validated.data);
     revalidateNotes();
   } catch (error) {
-    console.log({ error });
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again.";
     return { error: "Could not update notes hero" };
   }
 }
@@ -72,8 +78,9 @@ export async function createNote(values: TNoteSchema) {
     revalidateNotes();
     return { data: { id: note._id?.toString(), slug: note.slug } };
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not create note" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again.";
+    return { error: message };
   }
 }
 
@@ -103,6 +110,7 @@ export async function updateNote(id: string, values: TNoteSchema) {
         ? current?.publishedAt ?? new Date()
         : current?.publishedAt ?? null,
       author: current?.author,
+      updatedAt: new Date(),
     });
 
     revalidateNotes();
@@ -110,8 +118,9 @@ export async function updateNote(id: string, values: TNoteSchema) {
     revalidatePath(`/notes/manage/${slug}/edit`);
     return { data: { id, slug } };
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not update note" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again.";
+    return { error: message };
   }
 }
 
@@ -123,8 +132,9 @@ export async function deleteNote(slug: string) {
     await noteCommentRepository.deleteByNoteSlug(slug);
     revalidateNotes();
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not delete note" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again.";
+    return { error: message };
   }
 }
 
@@ -140,8 +150,9 @@ export async function deleteNotes(slugs: string[]) {
     );
     revalidateNotes();
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not delete selected notes" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again.";
+    return { error: message };
   }
 }
 
@@ -153,7 +164,8 @@ export async function deleteNoteComment(id: string, noteSlug: string) {
     revalidatePath(`/notes/manage/${noteSlug}`);
     revalidatePath(`/api/public/notes/${noteSlug}`);
   } catch (error) {
-    console.log({ error });
-    return { error: "Could not delete comment" };
+    const message =
+      extractErrorMessage(error) || "Something went wrong, try again.";
+    return { error: message };
   }
 }

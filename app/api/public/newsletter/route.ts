@@ -2,7 +2,7 @@ import { randomUUID } from "crypto";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { FRONTEND_BASE_URL } from "@/lib/constants";
+import { FRONTEND_BASE_URL, isProduction } from "@/lib/constants";
 import { newsletterRepository } from "@/lib/db/repositories/newsletter";
 import { NewsletterSubscriberSchema } from "@/lib/schemas/newsletter.schema";
 import { extractErrorMessage, parseValidationError } from "@/lib/utils";
@@ -15,7 +15,7 @@ const corsHeaders = {
 };
 
 export async function OPTIONS() {
-  return new Response(null, { headers: corsHeaders });
+  return new Response(null, { headers: corsHeaders, status: 204 });
 }
 
 export async function POST(request: Request) {
@@ -40,8 +40,8 @@ export async function POST(request: Request) {
       visitorId = randomUUID();
       cookieStore.set("__sid", visitorId, {
         httpOnly: true,
-        sameSite: "lax",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: isProduction ? "none" : "lax",
+        secure: isProduction,
         maxAge: 60 * 60 * 24 * 365,
         path: "/",
       });

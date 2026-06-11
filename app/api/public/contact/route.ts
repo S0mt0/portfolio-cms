@@ -22,7 +22,7 @@ const escapeHtml = (value: string) =>
     .replace(/'/g, "&#039;");
 
 export async function OPTIONS() {
-  return new Response(null, { headers: corsHeaders });
+  return new Response(null, { headers: corsHeaders, status: 204 });
 }
 
 export async function GET() {
@@ -126,7 +126,6 @@ export async function POST(request: Request) {
       { headers: corsHeaders, status: 200 }
     );
   } catch (error) {
-    console.error("Error sending contact message:", error);
     return NextResponse.json(
       {
         success: false,

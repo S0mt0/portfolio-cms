@@ -1,4 +1,5 @@
-const isDevelopment = process.env.NODE_ENV === "development";
+export const isDevelopment = process.env.NODE_ENV === "development";
+export const isProduction = process.env.NODE_ENV === "production";
 
 export const BASE_URL =
   process.env.BETTER_AUTH_URL ||
