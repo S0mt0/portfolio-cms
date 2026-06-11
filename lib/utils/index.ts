@@ -57,6 +57,21 @@ export function formatDate(date: Date | string) {
   return format(new Date(date), "dd MMMM, yyyy");
 }
 
-export function formatDateTime(date: Date | string) {
-  return format(new Date(date), "dd MMMM, yyyy h:mm a");
+export function formatDateTime(
+  value?: Date | null | string,
+  fallback?: string
+) {
+  const date =
+    typeof value === "string"
+      ? new Date(value)
+      : value instanceof Date
+      ? value
+      : null;
+
+  return date
+    ? `${formatDate(date)} ${date.toLocaleTimeString("en-NG", {
+        hour: "2-digit",
+        minute: "2-digit",
+      })}`
+    : fallback || "Still active";
 }

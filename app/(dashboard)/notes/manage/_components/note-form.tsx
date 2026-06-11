@@ -108,6 +108,8 @@ export function NoteForm({ mode, initialData }: NoteFormProps) {
   };
 
   const onSubmit = () => {
+    if (!payload.tags.length) return toast.error("Add at least one tag");
+
     startTransition(() => {
       const action =
         mode === "edit" && initialData?.id

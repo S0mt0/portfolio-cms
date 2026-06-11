@@ -3,18 +3,10 @@ import { Clock3 } from "lucide-react";
 import { Pagination } from "@/components/common/pagination";
 import { Badge } from "@/components/ui/badge";
 import { adminLogRepository } from "@/lib/db/repositories/admin-log.repository";
-import { formatDate } from "@/lib/utils";
 import { DashboardPageHeader } from "../_components/dashboard-page-header";
+import { formatDateTime } from "@/lib/utils";
 
 const LOG_LIMIT = 15;
-
-const formatDateTime = (value?: Date | null) =>
-  value
-    ? `${formatDate(value)} ${value.toLocaleTimeString("en", {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}`
-    : "Still active";
 
 export default async function LogsPage({
   searchParams,
@@ -57,7 +49,9 @@ export default async function LogsPage({
                 <p>Logout: {formatDateTime(log.logoutAt)}</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline">{log.device || "Device unknown"}</Badge>
+                <Badge variant="outline">
+                  {log.device || "Device unknown"}
+                </Badge>
                 <Badge variant="outline">
                   {log.browser || "Browser unknown"}
                 </Badge>
