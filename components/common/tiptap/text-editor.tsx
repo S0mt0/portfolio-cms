@@ -25,7 +25,6 @@ import {
 } from "lucide-react";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Highlight from "@tiptap/extension-highlight";
-import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import SubscriptExtension from "@tiptap/extension-subscript";
@@ -50,6 +49,7 @@ import {
   type CodeLanguage,
 } from "./nodes/code-highlighting";
 import HorizontalRule from "./nodes/horizontal-rule-node-extension";
+import Image from "./nodes/image-node";
 import { ImageUploadButton } from "./nodes/image-upload-button";
 import ImageUploadNode from "./nodes/image-upload-node-extension";
 import {
