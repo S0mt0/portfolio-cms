@@ -45,7 +45,6 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email_address: validated.data.email,
-        type: "regular",
         ip_address: ip,
         tags: ["portfolio"],
       }),
