@@ -45,6 +45,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         email_address: validated.data.email,
+        type: "regular",
         ip_address: ip,
         tags: ["portfolio"],
       }),
@@ -77,10 +78,13 @@ export async function POST(request: Request) {
       });
     }
 
+    console.log({ data });
+
     return NextResponse.json(
       {
         success: true,
-        message: "Almost done. Check your email to confirm your subscription.",
+        message:
+          "You're in. Thank you for subscribing to my newsletters.\nI’ll only send notifications when I publish new notes.",
         data: { subscribed: true },
       },
       { headers: corsHeaders, status: 201 }

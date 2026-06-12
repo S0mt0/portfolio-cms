@@ -39,7 +39,7 @@ export const newsletterRepository = {
       visitorId: data.visitorId,
       source: data.source,
       page: data.page,
-      confirmedSubscription: false,
+      confirmedSubscription: true,
     });
   },
 
