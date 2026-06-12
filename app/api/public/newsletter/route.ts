@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { FRONTEND_BASE_URL, isProduction } from "@/lib/constants";
-import { newsletterRepository } from "@/lib/db/repositories/newsletter";
 import { NewsletterSubscriberSchema } from "@/lib/schemas/newsletter.schema";
 import { extractErrorMessage, parseValidationError } from "@/lib/utils";
 
@@ -33,6 +32,38 @@ export async function POST(request: Request) {
       );
     }
 
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0] ||
+      request.headers.get("x-real-ip") ||
+      undefined;
+
+    const response = await fetch("https://api.buttondown.com/v1/subscribers", {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${process.env.BUTTONDOWN_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email_address: validated.data.email,
+        type: "regular",
+        ip_address: ip,
+        tags: ["portfolio"],
+      }),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            data?.detail || data?.message || "Could not subscribe this email.",
+        },
+        { status: Number(response.status), headers: corsHeaders }
+      );
+    }
+
     const cookieStore = await cookies();
     let visitorId = cookieStore.get("__sid")?.value;
 
@@ -47,15 +78,10 @@ export async function POST(request: Request) {
       });
     }
 
-    await newsletterRepository.subscribe({
-      ...validated.data,
-      visitorId,
-    });
-
     return NextResponse.json(
       {
         success: true,
-        message: "Subscribed",
+        message: "Almost done. Check your email to confirm your subscription.",
         data: { subscribed: true },
       },
       { headers: corsHeaders, status: 201 }

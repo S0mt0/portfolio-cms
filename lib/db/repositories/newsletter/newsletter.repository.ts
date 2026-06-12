@@ -26,6 +26,7 @@ export const newsletterRepository = {
             source: data.source || existing.source,
             page: data.page || existing.page,
             updatedAt: new Date(),
+            confirmedSubscription: true,
           },
         }
       );
@@ -38,6 +39,13 @@ export const newsletterRepository = {
       visitorId: data.visitorId,
       source: data.source,
       page: data.page,
+      confirmedSubscription: false,
     });
+  },
+
+  async unSubscribe(email: string) {
+    const result = await repository.collection().deleteOne({ email });
+
+    return result;
   },
 };

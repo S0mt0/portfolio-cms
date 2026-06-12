@@ -110,7 +110,7 @@ export async function updateNote(id: string, values: TNoteSchema) {
         ? current?.publishedAt ?? new Date()
         : current?.publishedAt ?? null,
       author: current?.author,
-      updatedAt: new Date(),
+      updatedAt: new Date(Date.now()),
     });
 
     revalidateNotes();

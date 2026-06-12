@@ -47,6 +47,7 @@ export interface NewsletterSubscriber extends CmsDocumentBase {
   visitorId?: string;
   source?: string;
   page?: string;
+  confirmedSubscription: boolean;
 }
 
 export type PublicNoteField =
