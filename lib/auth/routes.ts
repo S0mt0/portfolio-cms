@@ -2,7 +2,11 @@ import { BASE_URL } from "../constants";
 
 export const AUTH_ROUTES = ["/auth/login", "/auth/error"] as const;
 
-export const PUBLIC_ROUTES = ["/api/auth", "/api/public"] as const;
+export const PUBLIC_ROUTES = [
+  "/api/auth",
+  "/api/public",
+  "/api/webhooks",
+] as const;
 
 export const DEFAULT_AUTH_REDIRECT = "/";
 

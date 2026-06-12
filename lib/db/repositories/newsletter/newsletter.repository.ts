@@ -13,6 +13,7 @@ export const newsletterRepository = {
     visitorId?: string;
     source?: string;
     page?: string;
+    success?: boolean;
   }) {
     const email = data.email.trim().toLowerCase();
     const existing = await repository.findOne({ email });

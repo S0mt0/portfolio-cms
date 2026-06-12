@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
+  allowedDevOrigins: ["impish-showdown-nervy.ngrok-free.dev"],
 };
 
 export default nextConfig;

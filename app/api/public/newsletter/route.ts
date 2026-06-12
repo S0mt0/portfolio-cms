@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { FRONTEND_BASE_URL, isProduction } from "@/lib/constants";
 import { NewsletterSubscriberSchema } from "@/lib/schemas/newsletter.schema";
 import { extractErrorMessage, parseValidationError } from "@/lib/utils";
+import { newsletterRepository } from "@/lib/db/repositories/newsletter";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": FRONTEND_BASE_URL,
@@ -16,6 +17,10 @@ const corsHeaders = {
 export async function OPTIONS() {
   return new Response(null, { headers: corsHeaders, status: 204 });
 }
+
+const subscriber_blocked = "subscriber_blocked";
+const email_already_exists = "email_already_exists";
+const subscriber_suppressed = "subscriber_suppressed";
 
 export async function POST(request: Request) {
   try {
@@ -42,6 +47,7 @@ export async function POST(request: Request) {
       headers: {
         Authorization: `Token ${process.env.BUTTONDOWN_API_KEY}`,
         "Content-Type": "application/json",
+        // "X-Buttondown-Collision-Behavior": "overwrite",
       },
       body: JSON.stringify({
         email_address: validated.data.email,
@@ -54,37 +60,48 @@ export async function POST(request: Request) {
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
+      let message =
+        data?.detail || data?.message || "Could not subscribe this email";
+
+      if (data?.code === email_already_exists)
+        message = "This email is already subscribed.";
+
+      if (data?.code === subscriber_suppressed)
+        message =
+          "This email was previously unsubscribed. To resubscribe, please use the subscription management link from Buttondown or contact me.";
+
+      if (data?.code === subscriber_blocked)
+        message = "Please try a different email.";
+
       return NextResponse.json(
         {
           success: false,
-          message:
-            data?.detail || data?.message || "Could not subscribe this email.",
+          message,
         },
         { status: Number(response.status), headers: corsHeaders }
       );
     }
 
     const cookieStore = await cookies();
-    let visitorId = cookieStore.get("__sid")?.value;
+    const visitorId = cookieStore.get("__sid")?.value || data.id;
 
-    if (!visitorId) {
-      visitorId = randomUUID();
-      cookieStore.set("__sid", visitorId, {
-        httpOnly: true,
-        sameSite: isProduction ? "none" : "lax",
-        secure: isProduction,
-        maxAge: 60 * 60 * 24 * 365,
-        path: "/",
-      });
-    }
+    cookieStore.set("__sid", visitorId || randomUUID(), {
+      httpOnly: true,
+      sameSite: isProduction ? "none" : "lax",
+      secure: isProduction,
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+    });
 
-    console.log({ data });
+    await newsletterRepository.subscribe({
+      ...validated.data,
+      visitorId,
+    });
 
     return NextResponse.json(
       {
         success: true,
-        message:
-          "You're in. Thank you for subscribing to my newsletters.\nI’ll only send notifications when I publish new notes.",
+        message: "Thank you for subscribing to my newsletters.",
         data: { subscribed: true },
       },
       { headers: corsHeaders, status: 201 }

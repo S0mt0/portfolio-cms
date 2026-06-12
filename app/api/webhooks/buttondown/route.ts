@@ -19,6 +19,8 @@ type ButtondownWebhookEvent = {
 export async function POST(request: Request) {
   const event = (await request.json()) as ButtondownWebhookEvent;
 
+  console.log({ event });
+
   if (event.event_type === "subscriber.confirmed") {
     const subscriber = event.data?.email_address || "unknown@subscriber.com";
 
@@ -27,6 +29,16 @@ export async function POST(request: Request) {
     });
 
     console.log("Subscriber confirmed:", subscriber);
+  }
+
+  if (event.event_type === "subscriber.created") {
+    const subscriber = event.data?.email_address || "unknown@subscriber.com";
+
+    await newsletterRepository.subscribe({
+      email: subscriber,
+    });
+
+    console.log("Subscriber created:", subscriber);
   }
 
   if (event.event_type === "subscriber.unsubscribed") {
