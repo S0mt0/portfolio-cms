@@ -1,11 +1,12 @@
 import { type CreateEmailOptions, Resend } from "resend";
 import { BASE_URL } from "../constants";
+import { contactPageRepository } from "../db/repositories/contact.repository";
 
 class MailService {
   private sender: string;
   private resend?: Resend;
 
-  constructor(private appName: string = "CMS - Talktosomto") {
+  constructor(private appName: string = "CMS - Talktosomto.xyz") {
     this.sender = `${this.appName} <no-reply@talktosomto.xyz>`;
   }
 
@@ -43,13 +44,33 @@ class MailService {
   async sendAccessGrantedEmail(to: string) {
     try {
       await this.sendMail({
-        subject: "CMS Access Granted",
+        subject: "Talktosomto.xyz CMS Access Granted",
         to,
         text: `You've been granted access to the Talktosomto CMS Studio`,
         html: `You've been granted access to the Talktosomto.xyz CMS Studio. Login <a href="${BASE_URL}">here</a>.`,
       });
     } catch (error) {
       console.error("[error_sending_access_granted_email]: ", error);
+    }
+  }
+
+  async sendAccessRevokedEmail(to: string) {
+    try {
+      const contactPage = await contactPageRepository.get();
+      const recipient =
+        contactPage.recipientEmail ||
+        contactPage.socials.email ||
+        process.env.CONTACT_TO_EMAIL ||
+        "talktosomto@gmail.com";
+
+      await this.sendMail({
+        subject: "Talktosomto.xyz CMS Access Revoked",
+        to,
+        text: `Your access to the Talktosomto.xyz CMS Studio has been revoked, and your session ended. Please contact me if you believe this was a mistake.`,
+        html: `Your access to the Talktosomto.xyz CMS Studio has been revoked, and your session ended. Please <a href="mailto:${recipient}">contact</a> me if you believe this was a mistake.`,
+      });
+    } catch (error) {
+      console.error("[error_sending_access_revoked_email]: ", error);
     }
   }
 }

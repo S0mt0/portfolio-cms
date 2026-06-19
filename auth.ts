@@ -1,8 +1,8 @@
 import { betterAuth } from "better-auth/minimal";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
-import { magicLink } from "better-auth/plugins";
-import { type GenericEndpointContext } from "better-auth";
+import { magicLink, multiSession } from "better-auth/plugins";
+import { APIError, type GenericEndpointContext } from "better-auth";
 
 import { BASE_URL } from "@/lib/constants";
 import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
@@ -44,9 +44,10 @@ export const auth = betterAuth({
       create: {
         async before(user) {
           if (!(await isAllowedAdminEmail(user.email))) {
-            throw new Error(
-              "This CMS is private. Use an allowlisted admin email or GitHub account."
-            );
+            throw new APIError("UNAUTHORIZED", {
+              message:
+                "This CMS is private. Use an allowlisted admin email or GitHub account.",
+            });
           }
 
           return {
@@ -190,16 +191,21 @@ export const auth = betterAuth({
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         if (!(await isAllowedAdminEmail(email))) {
-          throw new Error("This CMS is private. Use an allowlisted email.");
+          throw new APIError("UNAUTHORIZED", {
+            message:
+              "The provided email is not allowed access to this CMS. Try another one, or request access from the admin.",
+          });
         }
-
-        console.log({ url });
 
         await mailService.sendMagicLinkEmail({
           to: email,
           url,
         });
       },
+    }),
+
+    multiSession({
+      maximumSessions: 2,
     }),
     nextCookies(),
   ],

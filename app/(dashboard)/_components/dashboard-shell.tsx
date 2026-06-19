@@ -23,12 +23,12 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { authClient } from "@/lib/auth/client";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 type NavChild =
   | {

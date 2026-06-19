@@ -8,7 +8,9 @@ export default function GlobalError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  error: Error & {
+    digest?: string;
+  };
   reset: () => void;
 }) {
   return (
@@ -31,7 +33,9 @@ export default function GlobalError({
         </p>
         <div className="mt-5 rounded-2xl border border-ink/10 bg-muted/30 p-4 font-mono text-xs text-ink/55">
           <p className="truncate">Message: {error.message}</p>
-          {error.digest ? <p className="truncate">Digest: {error.digest}</p> : null}
+          {error.digest ? (
+            <p className="truncate">Digest: {error.digest}</p>
+          ) : null}
         </div>
         <Button className="mt-6" onClick={reset}>
           <RotateCcw />

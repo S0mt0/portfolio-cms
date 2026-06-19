@@ -60,9 +60,9 @@ export function MagicLinkForm({ accessRequestEmail }: MagicLinkFormProps) {
     });
   }
 
-  const subject = "CMS Access Request";
+  const subject = "Talktosomto.xyz CMS Access Request";
 
-  const body = `Hello dear,\nPlease, kindly grant me access to your CMS studio.`;
+  const body = `Hello dear,\n\nPlease, kindly grant me access to your Talktosomto.xyz portfolio CMS studio.`;
 
   const href = `mailto:${accessRequestEmail}?subject=${encodeURIComponent(
     subject
