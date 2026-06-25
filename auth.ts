@@ -3,13 +3,13 @@ import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink, multiSession } from "better-auth/plugins";
 import { APIError, type GenericEndpointContext } from "better-auth";
+import { ObjectId } from "mongodb";
 
 import { BASE_URL } from "@/lib/constants";
 import { isAllowedAdminEmail } from "@/lib/auth/allowlist";
 import { db, client } from "@/lib/db/config";
 import { adminLogRepository } from "@/lib/db/repositories/admin-log.repository";
 import { mailService } from "@/lib/services/mail.service";
-import { ObjectId } from "mongodb";
 
 const getRequestDetails = (context: GenericEndpointContext | null) => {
   const headers = context?.headers;
@@ -28,12 +28,12 @@ const getRequestDetails = (context: GenericEndpointContext | null) => {
 };
 
 export const auth = betterAuth({
-  session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 604800, // 1 week
-    },
-  },
+  // session: {
+  //   cookieCache: {
+  //     enabled: true,
+  //     maxAge: 604800, // 1 week
+  //   },
+  // },
   baseURL: BASE_URL,
   secret: process.env.BETTER_AUTH_SECRET || process.env.AUTH_SECRET,
   database: mongodbAdapter(db, { client }),
@@ -44,10 +44,13 @@ export const auth = betterAuth({
       create: {
         async before(user) {
           if (!(await isAllowedAdminEmail(user.email))) {
-            throw new APIError("UNAUTHORIZED", {
-              message:
-                "This CMS is private. Use an allowlisted admin email or GitHub account.",
-            });
+            throw new Error(
+              "This CMS is private. Use an allowlisted admin email or GitHub account."
+            );
+            // throw new APIError("UNAUTHORIZED", {
+            //   message:
+            //     "This CMS is private. Use an allowlisted admin email or GitHub account.",
+            // });
           }
 
           return {

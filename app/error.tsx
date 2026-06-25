@@ -32,7 +32,7 @@ export default function GlobalError({
           and stack trace.
         </p>
         <div className="mt-5 rounded-2xl border border-ink/10 bg-muted/30 p-4 font-mono text-xs text-ink/55">
-          <p className="truncate">Message: {error.message}</p>
+          <p className="truncate">Message: {error.message.replace("_", " ")}</p>
           {error.digest ? (
             <p className="truncate">Digest: {error.digest}</p>
           ) : null}

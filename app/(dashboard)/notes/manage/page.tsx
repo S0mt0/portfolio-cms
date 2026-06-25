@@ -31,8 +31,10 @@ export default async function NotesManagePage({
           .toLowerCase()
           .includes(q)
       : true;
+
     const matchesPublished =
       published === "all" ? true : note.published === (published === "true");
+
     const matchesFeatured =
       featured === "all" ? true : note.featured === (featured === "true");
 
@@ -55,6 +57,7 @@ export default async function NotesManagePage({
     readTime: note.readTime || "1 min read",
     updatedAt: (note.updatedAt ?? note.createdAt).toLocaleDateString(),
     tags: note.tags || [],
+    views: note.views || 0,
   }));
 
   return (

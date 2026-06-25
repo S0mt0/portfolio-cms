@@ -33,6 +33,7 @@ export type NoteListItem = {
   featured: boolean;
   readTime: string;
   updatedAt: string;
+  views: number;
   tags: string[];
 };
 
@@ -213,7 +214,7 @@ export function NotesManager({
                   <div className="min-w-0">
                     <p className="truncate text-sm font-black">{note.title}</p>
                     <p className="truncate font-mono text-xs text-ink/45">
-                      Last updated {formatDateTime(note.updatedAt)}
+                      Reads [{note.views}]
                     </p>
                   </div>
 
@@ -226,7 +227,10 @@ export function NotesManager({
 
                   <Badge
                     variant={note.featured ? "secondary" : "outline"}
-                    className={cn("w-fit", note.featured && "bg-honey text-ink")}
+                    className={cn(
+                      "w-fit",
+                      note.featured && "bg-honey text-ink"
+                    )}
                   >
                     {note.featured ? "Featured" : "No"}
                   </Badge>
@@ -271,7 +275,9 @@ export function NotesManager({
                       <button
                         type="button"
                         className="min-w-0 flex-1 text-left"
-                        onClick={() => router.push(`/notes/manage/${note.slug}`)}
+                        onClick={() =>
+                          router.push(`/notes/manage/${note.slug}`)
+                        }
                       >
                         <p className="line-clamp-2 text-base font-black leading-6">
                           {note.title}

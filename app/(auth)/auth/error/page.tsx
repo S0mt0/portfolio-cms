@@ -53,7 +53,7 @@ export default async function AuthErrorPage({
           error code
         </p>
         <p className="mt-2 break-all rounded-2xl border border-ink/15 bg-ink px-3 py-2 font-mono text-sm font-bold text-paper">
-          {code}
+          {code.replace("_", " ")}
         </p>
         <p className="mt-5 text-sm leading-6 text-ink/65">{copy.hint}</p>
         <div className="mt-6 flex flex-col gap-2 sm:flex-row">
