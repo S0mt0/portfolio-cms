@@ -10,8 +10,9 @@ export const NotesHeroSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(1, { message: "Title is required" })
-    .max(140, { message: "Title must be 140 characters or less" }),
+    // .min(1, { message: "Title is required" })
+    .max(140, { message: "Title must be 140 characters or less" })
+    .optional(),
   description: z
     .string()
     .trim()
