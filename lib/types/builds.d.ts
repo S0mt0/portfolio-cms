@@ -4,7 +4,7 @@ export interface BuildsPageContent extends CmsDocumentBase {
   key: "builds";
   hero: {
     eyebrow: string;
-    title: string;
+    title?: string;
     description?: string;
   };
 }

@@ -4,7 +4,7 @@ export interface NotesPageContent extends CmsDocumentBase {
   key: "notes";
   hero: {
     eyebrow: string;
-    title: string;
+    title?: string;
     description?: string;
   };
 }

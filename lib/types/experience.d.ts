@@ -4,7 +4,7 @@ export interface ExperiencePageContent extends CmsDocumentBase {
   key: "experience";
   hero: {
     eyebrow: string;
-    title: string;
+    title?: string;
     description?: string;
     operatingNote?: string;
   };

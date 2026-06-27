@@ -20,7 +20,7 @@ export interface ContactPageContent extends CmsDocumentBase {
   key: "contact";
   hero: {
     eyebrow: string;
-    title: string;
+    title?: string;
     description?: string;
   };
   cvUrl?: string;

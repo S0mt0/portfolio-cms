@@ -114,6 +114,7 @@ export const HeroForm = (hero: LandingContent["hero"]) => {
           onChange={(headline) =>
             setFormData((prev) => ({ ...prev, headline }))
           }
+          maxLength={260}
         />
         <TextareaField
           label="Intro"
