@@ -3,6 +3,7 @@ import { BASE_URL } from "../constants";
 export const AUTH_ROUTES = ["/auth/login", "/auth/error"] as const;
 
 export const PUBLIC_ROUTES = [
+  "/auth/login",
   "/api/auth",
   "/api/public",
   "/api/webhooks",

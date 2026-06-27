@@ -21,7 +21,7 @@ export const HeroSectionSchema = z.object({
     .string()
     .trim()
     .min(1, { message: "Hero headline is required" })
-    .max(120, { message: "Hero headline must be 120 characters or less" }),
+    .max(260, { message: "Hero headline must be 260 characters or less" }),
   intro: z
     .string()
     .trim()
