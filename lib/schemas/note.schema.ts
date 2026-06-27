@@ -15,7 +15,7 @@ export const NotesHeroSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(300, { message: "Description must be 300 characters or less" })
+    .max(520, { message: "Description must be 520 characters or less" })
     .optional()
     .or(z.literal("")),
 });

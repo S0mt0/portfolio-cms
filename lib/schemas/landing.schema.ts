@@ -25,7 +25,7 @@ export const HeroSectionSchema = z.object({
   intro: z
     .string()
     .trim()
-    .max(260, { message: "Hero intro must be 260 characters or less" }),
+    .max(300, { message: "Hero intro must be 260 characters or less" }),
   portraitImageUrl: optionalText,
   primaryCta: CtaButtonSchema,
   secondaryCta: CtaButtonSchema,

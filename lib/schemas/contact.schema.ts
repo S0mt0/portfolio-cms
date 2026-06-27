@@ -16,7 +16,7 @@ export const ContactHeroSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(320, { message: "Description must be 320 characters or less" })
+    .max(420, { message: "Description must be 420 characters or less" })
     .optional()
     .or(z.literal("")),
 });

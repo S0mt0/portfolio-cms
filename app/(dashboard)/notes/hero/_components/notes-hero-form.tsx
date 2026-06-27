@@ -50,7 +50,7 @@ export function NotesHeroForm(props: TNotesHeroSchema) {
       <TextareaField
         label="Description"
         defaultValue={formData.description}
-        maxLength={300}
+        maxLength={420}
         onChange={(description) =>
           setFormData((prev) => ({ ...prev, description }))
         }

@@ -50,7 +50,7 @@ export function ExperienceHeroForm(props: TExperienceHeroSchema) {
       <TextareaField
         label="Description"
         defaultValue={formData.description}
-        maxLength={320}
+        maxLength={520}
         onChange={(description) =>
           setFormData((prev) => ({ ...prev, description }))
         }

@@ -16,7 +16,7 @@ export const BuildsHeroSchema = z.object({
   description: z
     .string()
     .trim()
-    .max(320, { message: "Description must be 320 characters or less" })
+    .max(520, { message: "Description must be 520 characters or less" })
     .optional()
     .or(z.literal("")),
 });

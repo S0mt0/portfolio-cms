@@ -53,7 +53,7 @@ export function ContactCopySection({
       <TextareaField
         label="Description"
         defaultValue={formData.hero.description}
-        maxLength={320}
+        maxLength={520}
         onChange={(description) =>
           setFormData((prev) => ({
             ...prev,

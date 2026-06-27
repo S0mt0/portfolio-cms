@@ -119,6 +119,7 @@ export const HeroForm = (hero: LandingContent["hero"]) => {
           label="Intro"
           defaultValue={formData.intro}
           onChange={(intro) => setFormData((prev) => ({ ...prev, intro }))}
+          maxLength={300}
         />
 
         <ImagePicker

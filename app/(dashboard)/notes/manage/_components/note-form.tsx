@@ -151,7 +151,7 @@ export function NoteForm({ mode, initialData }: NoteFormProps) {
           <TextareaField
             label="Excerpt"
             defaultValue={formData.excerpt}
-            maxLength={320}
+            maxLength={520}
             onChange={(excerpt) =>
               setFormData((prev) => ({ ...prev, excerpt }))
             }
