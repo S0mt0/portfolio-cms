@@ -121,7 +121,7 @@ export async function POST(request: Request) {
       {
         success: true,
         message:
-          "Message recieved. I will get back to you as soon as possible.",
+          "Message received. I will get back to you as soon as possible.",
       },
       { headers: corsHeaders, status: 200 }
     );
